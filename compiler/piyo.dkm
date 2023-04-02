@@ -1,8 +1,0 @@
-require diksam.lang;
-require hoge;
-
-int piyo_func() {
-    print("piyo piyo\n");
-    hogehoge_func();
-}
-

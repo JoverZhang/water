@@ -7,7 +7,8 @@ $(TARGET):
 	cd main; $(MAKE);
 
 clean:
-	cd compiler; rm -f *.o *~
+	cd main; rm -f *.o diksam
+	cd compiler; rm -f *.o diksam.tab.c y.tab.c y.tab.h y.output lex.yy.c *~
 	cd dvm;  rm -f *.o *~
 	cd share;  rm -f *.o *~
 	cd memory;  rm -f *.o *~

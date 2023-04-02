@@ -1,5 +1,0 @@
-int print(string str);
-
-void hoge() {
-    print("hoge\n");
-}
