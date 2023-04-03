@@ -169,7 +169,7 @@ dkc_compile_error(int line_number, CompileError id, ...)
     format_message(line_number,
                    &dkc_error_message_format[id],
                    &message, ap);
-    fprintf(stderr, "%s:%3d:", dkc_get_current_compiler()->path,
+    fprintf(stderr, "%s:%d: ", dkc_get_current_compiler()->path,
             line_number);
     dvm_print_wcs_ln(stderr, message.string);
     va_end(ap);
