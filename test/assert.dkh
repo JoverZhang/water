@@ -1,0 +1,20 @@
+class Panic : RuntimeException {
+  override
+  public constructor initialize(string message) {
+    this.message = message;
+  }
+}
+
+void panic(string message) {
+  throw new Panic("panic");
+}
+
+void assert(boolean expression, string message) {
+  if (!expression) {
+    panic(message);
+  }
+}
+
+void test_assert(boolean expression) {
+  assert(expression, "test failed");
+}

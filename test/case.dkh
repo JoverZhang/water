@@ -1,0 +1,403 @@
+///////////////////////////////////////////////////////////////////////////////
+// require
+require diksam.lang;
+require assert;
+
+///////////////////////////////////////
+//// rename
+rename assert.assert assert2;
+
+assert(true, "failed to rename function");
+assert2(true, "failed to rename function");
+
+///////////////////////////////////////////////////////////////////////////////
+// function
+int fibonacci(int n) {
+  if (n == 1 || n == 2) { return 1; }
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+void test_function() {
+  test_assert(55 == fibonacci(10));
+
+  println("success: test_function()");
+}
+test_function();
+
+///////////////////////////////////////////////////////////////////////////////
+// class
+
+///////////////////////////////////////
+//// method
+public class Point {
+  private int x;
+  private int y;
+  public constructor initialize(int x, int y) { this.x = x; this.y = y; }
+  public int get_x() { return this.x; }
+  public int set_x(int x) { this.x = x; }
+  public int get_y() { return this.y; }
+  public int set_y(int y) { this.y = y; }
+  public string to_string() { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
+}
+void test_class_method() {
+  Point point = new Point(10, 20);
+  test_assert("Point(x = 10, y = 20)" == point.to_string());
+
+  println("success: test_class_method()");
+}
+test_class_method();
+
+///////////////////////////////////////
+//// multi constructor
+class MultiConstructorClass {
+  public int n;
+  public constructor initialize() { this.n = 1; }
+  public constructor initialize2() { this.n = 2; }
+}
+void test_class_multi_constructor() {
+  test_assert(1 == new MultiConstructorClass().n);
+  test_assert(2 == new MultiConstructorClass.initialize2().n);
+
+  println("success: test_class_multi_constructor()");
+}
+test_class_multi_constructor();
+
+///////////////////////////////////////
+//// field init
+class FieldInitClass {
+  public int x;
+  public int y = 10;
+}
+void test_class_field_init() {
+  FieldInitClass o = new FieldInitClass();
+  test_assert(0 == o.x);
+  test_assert(10 == o.y);
+  println("success: test_class_field_init()");
+}
+test_class_field_init();
+
+///////////////////////////////////////
+//// interface
+interface ToString {
+  string to_string();
+}
+class ToStringClass : ToString {
+  override
+  public string to_string() { return "ToStringClass()"; }
+}
+void test_interface() {
+  ToString o = new ToStringClass();
+  test_assert("ToStringClass()" == o.to_string());
+
+  println("success: test_interface()");
+}
+test_interface();
+
+///////////////////////////////////////
+//// subclass (keywords: virtual, override and super)
+abstract class Parent {
+  private int pv;
+  virtual
+  public constructor initialize(int pv) { this.pv = pv; }
+  virtual
+  public string to_string() { return "Parent(pv = " + this.pv + ")"; }
+}
+
+class Child : Parent {
+  private int cv;
+  override
+  public constructor initialize(int pv, int cv) { super.initialize(pv); this.cv = cv; }
+  override
+  public string to_string() { return "Child(" + super.to_string() + ", cv = " + this.cv + ")"; }
+}
+
+void test_class_subclass() {
+  Child child = new Child(10, 20);
+  test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_string());
+
+  println("success: test_class_subclass()");
+}
+test_class_subclass();
+
+///////////////////////////////////////////////////////////////////////////////
+// variables
+void test_variables() {
+  int i = 10;
+  double f = 30.2;
+  string s = "Hello ";
+  test_assert(40.2 == i + f);
+  i = i + f;
+  test_assert("Hello 40" == s + i);
+
+  println("success: test_variables()");
+}
+test_variables();
+
+///////////////////////////////////////////////////////////////////////////////
+// array
+void test_array() {
+  int[] int_arr = { 1, 2, 3 };
+  test_assert(3 == int_arr.size());
+  test_assert(1 == int_arr[0]);
+  test_assert(2 == int_arr[1]);
+  test_assert(3 == int_arr[2]);
+
+  double[] double_arr = { 1.0, 2, 3 };
+  test_assert(3 == double_arr.size());
+  test_assert(1 == double_arr[0]);
+  test_assert(2 == double_arr[1]);
+  test_assert(3 == double_arr[2]);
+
+  string str = "Hello World";
+  test_assert(11 == str.length());
+  test_assert("World" == str.substr(6, 5));
+  test_assert(5 == str.substr(6, 5).length());
+
+  Point p1 = new Point(10, 10);
+  Point p3 = new Point(30, 30);
+  Point[] point_arr = { p1, new Point(20, 20), p3 };
+  test_assert(3 == point_arr.size());
+  test_assert(p1 == point_arr[0]);
+  test_assert(p3 == point_arr[2]);
+
+  println("success: test_array()");
+}
+test_array();
+
+///////////////////////////////////////////////////////////////////////////////
+// cast
+void test_cast() {
+  Child child = new Child(10, 20);
+  Parent parent1 = child;
+  Parent parent2 = child;
+  test_assert(parent1 == parent2);
+
+  println("success: test_cast()");
+}
+test_cast();
+
+///////////////////////////////////////////////////////////////////////////////
+// downcast
+void test_downcast() {
+  ToStringClass o = new ToStringClass();
+  ToString t = o;
+  o = t::ToStringClass:>;
+  test_assert("ToStringClass()" == (t::ToStringClass:>).to_string());
+
+  println("success: test_downcast()");
+}
+test_downcast();
+
+///////////////////////////////////////////////////////////////////////////////
+// instanceof
+void test_instanceof() {
+  ToString o = new ToStringClass();
+  test_assert(o instanceof ToStringClass);
+  // test_assert(o instanceof ToString); // always is true
+
+  Parent child = new Child(10, 20);
+  test_assert(child instanceof Child);
+  // test_assert(child instanceof Parent); // always is true
+
+  println("success: test_instanceof()");
+}
+test_instanceof();
+
+///////////////////////////////////////////////////////////////////////////////
+// delegate
+delegate int DelegateF2I(double f);
+int f2i(double f) { return f; }
+class DelegateClass {
+  public DelegateF2I f;
+}
+void test_delegate() {
+  DelegateF2I f = f2i;
+  test_assert(42 == f(42.2));
+
+  DelegateClass o = new DelegateClass();
+  o.f = f2i;
+  DelegateF2I g = o.f;
+  test_assert(42 == g(42.2));
+
+  println("success: test_delegate()");
+}
+test_delegate();
+
+///////////////////////////////////////////////////////////////////////////////
+// enum
+enum Color {
+  RED,
+  GREEN,
+  BLUE,
+}
+void test_enum() {
+  Color red = Color.RED;
+  Color green = Color.GREEN;
+  Color blue = Color.BLUE;
+  test_assert(Color.RED == red);
+  test_assert("RED" == "" + Color.RED);
+  test_assert(red != green);
+  test_assert(blue != green);
+
+  println("success: test_enum()");
+}
+test_enum();
+
+///////////////////////////////////////////////////////////////////////////////
+// for loop
+void test_for_loop() {
+  int n = 0;
+  int i;
+  for (i = 0; i <= 100; i++) { n += i; }
+  test_assert(5050 == n);
+
+  println("success: test_for_loop()");
+}
+test_for_loop();
+
+///////////////////////////////////////////////////////////////////////////////
+// do while loop
+void test_while_loop() {
+  int n = 0; int i = 0;
+  while (i <= 100) { n += i; i++; }
+  test_assert(5050 == n);
+
+  n = 0; i = 0;
+  do { n += i; i++; } while (i <= 100);
+  test_assert(5050 == n);
+
+  println("success: test_while_loop()");
+}
+test_while_loop();
+
+///////////////////////////////////////////////////////////////////////////////
+// if
+int test_if_compare(int x, int y) {
+  if (x > y) { return 1; }
+  elsif (x < y) { return -1; }
+  else { return 0; }
+}
+void test_if() {
+  test_assert(1 == test_if_compare(20, 10));
+  test_assert(-1 == test_if_compare(10, 20));
+  test_assert(0 == test_if_compare(10, 10));
+  println("success: test_if()");
+}
+test_if();
+
+///////////////////////////////////////////////////////////////////////////////
+// switch
+string test_switch_color(Color color) {
+  switch (color)
+    case Color.RED { return "RED"; }
+    case Color.GREEN { return "GREEN"; }
+    case Color.BLUE { return "BLUE"; }
+    default { return "NULL"; }
+}
+void test_switch() {
+  test_switch_color(Color.RED);
+  println("success: test_switch()");
+}
+test_switch();
+
+///////////////////////////////////////////////////////////////////////////////
+// exception
+///////////////////////////////////////
+//// throw exception
+class TestException : Exception {}
+void test_exception_f() throws Exception { throw new TestException(); }
+void test_exception() {
+  int n = 2;
+  try {
+    test_exception_f();
+    test_assert(false);
+  } catch (TestException e) {
+    test_assert(true);
+    n -= 1;
+  } catch (Exception e) {
+    test_assert(false);
+  } finally {
+    n -= 1;
+  }
+  test_assert(0 == n);
+
+  println("success: test_exception()");
+}
+test_exception();
+
+///////////////////////////////////////
+//// throw runtime exception
+class TestRuntimeException : RuntimeException {}
+void test_runtime_exception_f() { throw new TestRuntimeException(); }
+void test_runtime_exception() {
+  int n = 2;
+  try {
+    test_runtime_exception_f();
+    test_assert(false);
+  } catch (TestRuntimeException e) {
+    test_assert(true);
+    n -= 1;
+  } catch (RuntimeException e) {
+    test_assert(false);
+  } finally {
+    n -= 1;
+  }
+  test_assert(0 == n);
+
+  println("success: test_runtime_exception()");
+}
+test_runtime_exception();
+
+///////////////////////////////////////
+//// null pointer exception
+void test_null_pointer_exception() {
+  int n = 1;
+  ToStringClass o;
+  try {
+    o.to_string();
+  } catch(NullPointerException e) {
+    n = 0;
+  }
+  test_assert(0 == n);
+
+  println("success: test_null_pointer_exception()");
+}
+test_null_pointer_exception();
+
+///////////////////////////////////////////////////////////////////////////////
+// global variable
+int global_i = 10;
+void test_global_variable() {
+  test_assert(10 == global_i);
+  global_i = 20;
+  test_assert(20 == global_i);
+
+  println("success: test_global_variable()");
+}
+test_global_variable();
+
+///////////////////////////////////////////////////////////////////////////////
+// native pointer (File)
+void test_native_pointer() {
+  File fd = fopen("test/hello.txt", "r");
+  string[] contents = new string[0];
+  string str;
+  while ((str = fgets(fd)) != null) {
+    contents.add(str);
+  }
+  test_assert(2 == contents.size());
+  test_assert("hello\n" == contents[0]);
+  test_assert("world\n" == contents[1]);
+
+  println("success: test_native_pointer()");
+}
+test_native_pointer();
+
+///////////////////////////////////////////////////////////////////////////////
+// native call
+int hoge(int v) { return v; }
+void test_native_call() {
+  test_native(hoge);
+
+  println("success: test_native_call()");
+}
+test_native_call();
