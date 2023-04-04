@@ -453,9 +453,9 @@ primary_no_new_array
         {
             $$ = $2;
         }
-        | primary_expression DOWN_CAST_BEGIN type_specifier DOWN_CAST_END
+        | primary_expression DOT LP type_specifier RP
         {
-            $$ = dkc_create_down_cast_expression($1, $3);
+            $$ = dkc_create_down_cast_expression($1, $4);
         }
         | INT_LITERAL
         | DOUBLE_LITERAL

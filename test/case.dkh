@@ -180,8 +180,8 @@ test_cast();
 void test_downcast() {
   ToStringClass o = new ToStringClass();
   ToString t = o;
-  o = t::ToStringClass:>;
-  test_assert("ToStringClass()" == (t::ToStringClass:>).to_string());
+  o = t.(ToStringClass);
+  test_assert("ToStringClass()" == t.(ToStringClass).to_string());
 
   println("success: test_downcast()");
 }
