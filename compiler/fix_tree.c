@@ -2275,6 +2275,7 @@ fix_switch_statement(Block *current_block, SwitchStatement *switch_s,
         fix_statement_list(case_pos->block, case_pos->block->statement_list,
                            fd, el_p);
     }
+    // TODO: default is optional
     fix_statement_list(switch_s->default_block,
                        switch_s->default_block->statement_list,
                        fd, el_p);
