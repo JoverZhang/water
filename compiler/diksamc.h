@@ -939,6 +939,9 @@ Expression *dkc_create_instanceof_expression(Expression *operand,
 Expression *dkc_create_identifier_expression(char *identifier);
 Expression *dkc_create_function_call_expression(Expression *function,
                                                 ArgumentList *argument);
+Expression *dkc_create_static_function_call_expression(char *class_name,
+                                                       char *function_name,
+                                                ArgumentList *argument);
 Expression *dkc_create_down_cast_expression(Expression *operand,
                                             TypeSpecifier *type);
 Expression *dkc_create_member_expression(Expression *expression,
@@ -1023,6 +1026,10 @@ dkc_create_method_member(ClassOrMemberModifierList *modifier,
                          DVM_Boolean is_constructor);
 FunctionDefinition *
 dkc_method_function_define(TypeSpecifier *type, char *identifier,
+                           ParameterList *parameter_list,
+                           ExceptionList *throws, Block *block);
+FunctionDefinition *
+dkc_static_method_function_define(TypeSpecifier *type, char *identifier,
                            ParameterList *parameter_list,
                            ExceptionList *throws, Block *block);
 FunctionDefinition *

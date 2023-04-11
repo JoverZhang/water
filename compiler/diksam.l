@@ -141,6 +141,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"virtual"      return VIRTUAL_T;
 <INITIAL>"override"     return OVERRIDE_T;
 <INITIAL>"abstract"     return ABSTRACT_T;
+<INITIAL>"static"       return STATIC_T;
 <INITIAL>"this"         return THIS_T;
 <INITIAL>"super"        return SUPER_T;
 <INITIAL>"constructor"  return CONSTRUCTOR;
@@ -185,8 +186,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"--"           return DECREMENT;
 <INITIAL>"!"            return EXCLAMATION;
 <INITIAL>"."            return DOT;
-<INITIAL>"::"           return DOWN_CAST_BEGIN;
-<INITIAL>":>"           return DOWN_CAST_END;
+<INITIAL>"::"           return STATIC_ACCESS;
 <INITIAL>[A-Za-z_][A-Za-z_0-9]* {
     yylval.identifier = dkc_create_identifier(yytext);
     return IDENTIFIER;

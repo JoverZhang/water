@@ -80,6 +80,8 @@ dvm_search_file(char *search_path, char *search_file,
 DVM_Boolean dvm_compare_string(char *str1, char *str2);
 DVM_Boolean dvm_compare_package_name(char *p1, char *p2);
 char *
+dvm_create_static_method_function_name(char *class_name, char *method_name);
+char *
 dvm_create_method_function_name(char *class_name, char *method_name);
 void dvm_strncpy(char *dest, char *src, int buf_size);
 

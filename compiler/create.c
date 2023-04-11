@@ -557,6 +557,24 @@ dkc_create_function_call_expression(Expression *function,
 }
 
 Expression *
+dkc_create_static_function_call_expression(char *class_name,
+                                           char *function_name,
+                                           ArgumentList *argument)
+{
+    Expression  *exp;
+
+    char *fn_name = dvm_create_static_method_function_name(class_name,
+                                                           function_name);
+    Expression *function = dkc_create_identifier_expression(fn_name);
+
+    exp = dkc_alloc_expression(FUNCTION_CALL_EXPRESSION);
+    exp->u.function_call_expression.function = function;
+    exp->u.function_call_expression.argument = argument;
+
+    return exp;
+}
+
+Expression *
 dkc_create_down_cast_expression(Expression *operand, TypeSpecifier *type)
 {
     Expression  *exp;
@@ -1319,6 +1337,28 @@ dkc_method_function_define(TypeSpecifier *type, char *identifier,
 
     fd = dkc_create_function_definition(type, identifier, parameter_list,
                                         throws, block);
+
+    return fd;
+}
+
+FunctionDefinition *
+dkc_static_method_function_define(TypeSpecifier *type, char *identifier,
+                           ParameterList *parameter_list,
+                           ExceptionList *throws, Block *block)
+{
+    FunctionDefinition *fd;
+    DKC_Compiler *compiler = dkc_get_current_compiler();
+
+    // TODO: just define static method
+    // define empty function
+    fd = dkc_create_function_definition(type, identifier, NULL,
+                                        NULL, dkc_alloc_block());
+
+    // define function `class_name::method_name`
+    char *name = dvm_create_static_method_function_name(
+        compiler->current_class_definition->name,
+        identifier);
+    dkc_function_define(type, name, parameter_list, throws, block);
 
     return fd;
 }

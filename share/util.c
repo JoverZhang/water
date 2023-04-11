@@ -79,6 +79,21 @@ dvm_compare_package_name(char *p1, char *p2)
 }
 
 char *
+dvm_create_static_method_function_name(char *class_name, char *method_name)
+{
+    size_t class_name_len;
+    size_t method_name_len;
+    char *ret;
+
+    class_name_len = strlen(class_name);
+    method_name_len = strlen(method_name);
+    ret = MEM_malloc(class_name_len + method_name_len + 3);
+    sprintf(ret, "%s::%s", class_name, method_name);
+
+    return ret;
+}
+
+char *
 dvm_create_method_function_name(char *class_name, char *method_name)
 {
     int class_name_len;

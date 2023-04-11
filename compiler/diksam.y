@@ -45,8 +45,8 @@
         VOID_T BOOLEAN_T INT_T DOUBLE_T STRING_T NATIVE_POINTER_T
         NEW REQUIRE RENAME
         CLASS_T INTERFACE_T PUBLIC_T PRIVATE_T VIRTUAL_T OVERRIDE_T
-        ABSTRACT_T THIS_T SUPER_T CONSTRUCTOR INSTANCEOF
-        DOWN_CAST_BEGIN DOWN_CAST_END DELEGATE FINAL ENUM CONST
+        ABSTRACT_T STATIC_T THIS_T SUPER_T CONSTRUCTOR INSTANCEOF
+        STATIC_ACCESS DELEGATE FINAL ENUM CONST
 %type   <package_name> package_name
 %type   <require_list> require_list require_declaration
 %type   <rename_list> rename_list rename_declaration
@@ -448,6 +448,14 @@ primary_no_new_array
         | primary_expression LP RP
         {
             $$ = dkc_create_function_call_expression($1, NULL);
+        }
+        | IDENTIFIER STATIC_ACCESS IDENTIFIER LP argument_list RP
+        {
+            $$ = dkc_create_static_function_call_expression($1, $3, $5);
+        }
+        | IDENTIFIER STATIC_ACCESS IDENTIFIER LP RP
+        {
+            $$ = dkc_create_static_function_call_expression($1, $3, NULL);
         }
         | LP expression RP
         {
@@ -920,6 +928,14 @@ method_function_definition
         | type_specifier IDENTIFIER LP RP throws_clause block
         {
             $$ = dkc_method_function_define($1, $2, NULL, $5, $6);
+        }
+        | STATIC_T type_specifier IDENTIFIER LP parameter_list RP throws_clause block
+        {
+            $$ = dkc_static_method_function_define($2, $3, $5, $7, $8);
+        }
+        | STATIC_T type_specifier IDENTIFIER LP RP throws_clause block
+        {
+            $$ = dkc_static_method_function_define($2, $3, NULL, $6, $7);
         }
         | type_specifier IDENTIFIER LP parameter_list RP throws_clause
           SEMICOLON
