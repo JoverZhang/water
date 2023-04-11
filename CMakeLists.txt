@@ -4,6 +4,7 @@ project(water VERSION 1.0 LANGUAGES C CXX)
 set(CMAKE_C_STANDARD 23)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include_directories(include)
 
