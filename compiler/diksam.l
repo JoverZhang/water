@@ -151,6 +151,8 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"final"        return FINAL;
 <INITIAL>"const"        return CONST;
 <INITIAL>"let"          return LET;
+<INITIAL>"fn"           return FN;
+<INITIAL>"->"           return ARROW;
 <INITIAL>"("            return LP;
 <INITIAL>")"            return RP;
 <INITIAL>"{"            return LC;

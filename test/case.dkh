@@ -12,11 +12,11 @@ assert2(true, "failed to rename function");
 
 ///////////////////////////////////////////////////////////////////////////////
 // function
-int fibonacci(int n) {
+fn fibonacci(n: int) -> int {
   if (n == 1 || n == 2) { return 1; }
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
-void test_function() {
+fn test_function() -> void {
   test_assert(55 == fibonacci(10));
 
   println("success: test_function()");
@@ -29,16 +29,16 @@ test_function();
 ///////////////////////////////////////
 //// method
 public class Point {
-  private int x;
-  private int y;
-  public constructor initialize(int x, int y) { this.x = x; this.y = y; }
-  public int get_x() { return this.x; }
-  public int set_x(int x) { this.x = x; }
-  public int get_y() { return this.y; }
-  public int set_y(int y) { this.y = y; }
-  public string to_string() { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
+  private x: int;
+  private y: int;
+  public constructor initialize(x: int, y: int) { this.x = x; this.y = y; }
+  public fn get_x(this) -> int { return this.x; }
+  public fn set_x(this, x: int) -> int { this.x = x; }
+  public fn get_y(this) -> int { return this.y; }
+  public fn set_y(this, y: int) -> int { this.y = y; }
+  public fn to_string(this) -> string { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
 }
-void test_class_method() {
+fn test_class_method() -> void {
   let point = new Point(10, 20);
   test_assert("Point(x = 10, y = 20)" == point.to_string());
 
@@ -49,11 +49,11 @@ test_class_method();
 ///////////////////////////////////////
 //// multi constructor
 class MultiConstructorClass {
-  public int n;
+  public n: int;
   public constructor initialize() { this.n = 1; }
   public constructor initialize2() { this.n = 2; }
 }
-void test_class_multi_constructor() {
+fn test_class_multi_constructor() -> void {
   test_assert(1 == new MultiConstructorClass().n);
   test_assert(2 == new MultiConstructorClass.initialize2().n);
 
@@ -64,10 +64,10 @@ test_class_multi_constructor();
 ///////////////////////////////////////
 //// field init
 class FieldInitClass {
-  public int x;
-  public int y = 10;
+  public x: int;
+  public y: int = 10;
 }
-void test_class_field_init() {
+fn test_class_field_init() -> void {
   let o = new FieldInitClass();
   test_assert(0 == o.x);
   test_assert(10 == o.y);
@@ -78,13 +78,13 @@ test_class_field_init();
 ///////////////////////////////////////
 //// interface
 interface ToString {
-  string to_string();
+  fn to_string(this) -> string;
 }
 class ToStringClass : ToString {
   override
-  public string to_string() { return "ToStringClass()"; }
+  public fn to_string(this) -> string { return "ToStringClass()"; }
 }
-void test_interface() {
+fn test_interface() -> void {
   let o: ToString = new ToStringClass();
   test_assert("ToStringClass()" == o.to_string());
 
@@ -95,22 +95,22 @@ test_interface();
 ///////////////////////////////////////
 //// subclass (keywords: virtual, override and super)
 abstract class Parent {
-  private int pv;
+  private pv: int;
   virtual
-  public constructor initialize(int pv) { this.pv = pv; }
+  public constructor initialize(pv: int) { this.pv = pv; }
   virtual
-  public string to_string() { return "Parent(pv = " + this.pv + ")"; }
+  public fn to_string(this) -> string { return "Parent(pv = " + this.pv + ")"; }
 }
 
 class Child : Parent {
-  private int cv;
+  private cv: int;
   override
-  public constructor initialize(int pv, int cv) { super.initialize(pv); this.cv = cv; }
+  public constructor initialize(pv: int, cv: int) { super.initialize(pv); this.cv = cv; }
   override
-  public string to_string() { return "Child(" + super.to_string() + ", cv = " + this.cv + ")"; }
+  public fn to_string(this) -> string { return "Child(" + super.to_string() + ", cv = " + this.cv + ")"; }
 }
 
-void test_class_subclass() {
+fn test_class_subclass() -> void {
   let child = new Child(10, 20);
   test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_string());
 
@@ -120,7 +120,7 @@ test_class_subclass();
 
 ///////////////////////////////////////////////////////////////////////////////
 // variables
-void test_variables() {
+fn test_variables() -> void {
   let i = 10;
   let f = 30.2;
   let s = "Hello ";
@@ -134,7 +134,7 @@ test_variables();
 
 ///////////////////////////////////////////////////////////////////////////////
 // array
-void test_array() {
+fn test_array() -> void {
   let int_arr = { 1, 2, 3 };
   test_assert(3 == int_arr.size());
   test_assert(1 == int_arr[0]);
@@ -165,7 +165,7 @@ test_array();
 
 ///////////////////////////////////////////////////////////////////////////////
 // cast
-void test_cast() {
+fn test_cast() -> void {
   let child = new Child(10, 20);
   let parent1: Parent = child;
   let parent2: Parent = child;
@@ -177,7 +177,7 @@ test_cast();
 
 ///////////////////////////////////////////////////////////////////////////////
 // downcast
-void test_downcast() {
+fn test_downcast() -> void {
   let o = new ToStringClass();
   let t: ToString = o;
   o = t.(ToStringClass);
@@ -189,7 +189,7 @@ test_downcast();
 
 ///////////////////////////////////////////////////////////////////////////////
 // instanceof
-void test_instanceof() {
+fn test_instanceof() -> void {
   let o: ToString = new ToStringClass();
   test_assert(o instanceof ToStringClass);
   // test_assert(o instanceof ToString); // always is true
@@ -204,12 +204,12 @@ test_instanceof();
 
 ///////////////////////////////////////////////////////////////////////////////
 // delegate
-delegate int DelegateF2I(double f);
-int f2i(double f) { return f; }
+delegate fn DelegateF2I(f: double) -> int;
+fn f2i(f: double) -> int { return f; }
 class DelegateClass {
-  public DelegateF2I f;
+  public f: DelegateF2I;
 }
-void test_delegate() {
+fn test_delegate() -> void {
   let f: DelegateF2I = f2i;
   test_assert(42 == f(42.2));
 
@@ -229,7 +229,7 @@ enum Color {
   GREEN,
   BLUE,
 }
-void test_enum() {
+fn test_enum() -> void {
   let red = Color.RED;
   let green = Color.GREEN;
   let blue = Color.BLUE;
@@ -244,7 +244,7 @@ test_enum();
 
 ///////////////////////////////////////////////////////////////////////////////
 // for loop
-void test_for_loop() {
+fn test_for_loop() -> void {
   let n = 0;
   let i: int;
   for (i = 0; i <= 100; i++) { n += i; }
@@ -256,7 +256,7 @@ test_for_loop();
 
 ///////////////////////////////////////////////////////////////////////////////
 // do while loop
-void test_while_loop() {
+fn test_while_loop() -> void {
   let n = 0; let i = 0;
   while (i <= 100) { n += i; i++; }
   test_assert(5050 == n);
@@ -271,12 +271,12 @@ test_while_loop();
 
 ///////////////////////////////////////////////////////////////////////////////
 // if
-int test_if_compare(int x, int y) {
+fn test_if_compare(x: int, y: int) -> int {
   if (x > y) { return 1; }
   elsif (x < y) { return -1; }
   else { return 0; }
 }
-void test_if() {
+fn test_if() -> void {
   test_assert(1 == test_if_compare(20, 10));
   test_assert(-1 == test_if_compare(10, 20));
   test_assert(0 == test_if_compare(10, 10));
@@ -286,14 +286,14 @@ test_if();
 
 ///////////////////////////////////////////////////////////////////////////////
 // switch
-string test_switch_color(Color color) {
+fn test_switch_color(color: Color) -> string {
   switch (color)
     case Color.RED { return "RED"; }
     case Color.GREEN { return "GREEN"; }
     case Color.BLUE { return "BLUE"; }
     default { return "NULL"; }
 }
-void test_switch() {
+fn test_switch() -> void {
   test_switch_color(Color.RED);
   println("success: test_switch()");
 }
@@ -304,8 +304,8 @@ test_switch();
 ///////////////////////////////////////
 //// throw exception
 class TestException : Exception {}
-void test_exception_f() throws Exception { throw new TestException(); }
-void test_exception() {
+fn test_exception_f() -> void throws Exception { throw new TestException(); }
+fn test_exception() -> void {
   let n = 2;
   try {
     test_exception_f();
@@ -327,8 +327,8 @@ test_exception();
 ///////////////////////////////////////
 //// throw runtime exception
 class TestRuntimeException : RuntimeException {}
-void test_runtime_exception_f() { throw new TestRuntimeException(); }
-void test_runtime_exception() {
+fn test_runtime_exception_f() -> void { throw new TestRuntimeException(); }
+fn test_runtime_exception() -> void {
   let n = 2;
   try {
     test_runtime_exception_f();
@@ -349,7 +349,7 @@ test_runtime_exception();
 
 ///////////////////////////////////////
 //// null pointer exception
-void test_null_pointer_exception() {
+fn test_null_pointer_exception() -> void {
   let n = 1;
   let o: ToStringClass;
   try {
@@ -366,7 +366,7 @@ test_null_pointer_exception();
 ///////////////////////////////////////////////////////////////////////////////
 // global variable
 let global_i = 10;
-void test_global_variable() {
+fn test_global_variable() -> void {
   test_assert(10 == global_i);
   global_i = 20;
   test_assert(20 == global_i);
@@ -377,7 +377,7 @@ test_global_variable();
 
 ///////////////////////////////////////////////////////////////////////////////
 // native pointer (File)
-void test_native_pointer() {
+fn test_native_pointer() -> void {
   let fd = fopen("test/hello.txt", "r");
   let contents = new string[0];
   let str: string;
@@ -394,8 +394,8 @@ test_native_pointer();
 
 ///////////////////////////////////////////////////////////////////////////////
 // native call
-int hoge(int v) { return v; }
-void test_native_call() {
+fn hoge(v: int) -> int { return v; }
+fn test_native_call() -> void {
   test_native(hoge);
 
   println("success: test_native_call()");

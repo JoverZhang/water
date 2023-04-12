@@ -1,27 +1,27 @@
 require diksam.lang;
 
-native_pointer __fopen(string file_name, string mode);
-string __fgets(native_pointer fp);
-void __fputs(string str, native_pointer fp);
-void __fclose(native_pointer fp);
+fn __fopen(file_name: string, mode: string) -> native_pointer;
+fn __fgets(fp: native_pointer) -> string;
+fn __fputs(str: string, fp: native_pointer) -> void;
+fn __fclose(fp: native_pointer) -> void;
 
-File fopen(string file_name, string mode) {
-    let fp = __fopen(file_name, mode);
-    if (fp == null) {
-	return null;
-    } else {
-	return new File(fp);
-    }
+fn fopen(file_name: string, mode: string) -> File {
+  let fp = __fopen(file_name, mode);
+  if (fp == null) {
+    return null;
+  } else {
+    return new File(fp);
+  }
 }
 
-string fgets(File file) {
+fn fgets(file: File) -> string {
     return __fgets(file.fp);
 }
 
-void fputs(string str, File file) {
+fn fputs(str: string, file: File) -> void {
     __fputs(str, file.fp);
 }
 
-void fclose(File file) {
+fn fclose(file: File) -> void {
     __fclose(file.fp);
 }

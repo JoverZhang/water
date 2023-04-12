@@ -46,7 +46,7 @@
         NEW REQUIRE RENAME
         CLASS_T INTERFACE_T PUBLIC_T PRIVATE_T VIRTUAL_T OVERRIDE_T
         ABSTRACT_T STATIC_T THIS_T SUPER_T CONSTRUCTOR INSTANCEOF
-        STATIC_ACCESS DELEGATE FINAL ENUM CONST LET
+        STATIC_ACCESS DELEGATE FINAL ENUM CONST LET FN ARROW
 %type   <package_name> package_name
 %type   <require_list> require_list require_declaration
 %type   <rename_list> rename_list rename_declaration
@@ -219,32 +219,35 @@ type_specifier
         | identifier_type_specifier
         ;
 function_definition
-        : type_specifier IDENTIFIER LP parameter_list RP throws_clause block
+        : FN IDENTIFIER LP parameter_list RP
+          ARROW type_specifier throws_clause block
         {
-            dkc_function_define($1, $2, $4, $6, $7);
+            dkc_function_define($7, $2, $4, $8, $9);
         }
-        | type_specifier IDENTIFIER LP RP throws_clause block
+        | FN IDENTIFIER LP RP
+          ARROW type_specifier throws_clause block
         {
-            dkc_function_define($1, $2, NULL, $5, $6);
+            dkc_function_define($6, $2, NULL, $7, $8);
         }
-        | type_specifier IDENTIFIER LP parameter_list RP throws_clause
-          SEMICOLON
+        | FN IDENTIFIER LP parameter_list RP
+          ARROW type_specifier throws_clause SEMICOLON
         {
-            dkc_function_define($1, $2, $4, $6, NULL);
+            dkc_function_define($7, $2, $4, $8, NULL);
         }
-        | type_specifier IDENTIFIER LP RP throws_clause SEMICOLON
+        | FN IDENTIFIER LP RP
+          ARROW type_specifier throws_clause SEMICOLON
         {
-            dkc_function_define($1, $2, NULL, $5, NULL);
+            dkc_function_define($6, $2, NULL, $7, NULL);
         }
         ;
 parameter_list
-        : type_specifier IDENTIFIER
+        : IDENTIFIER COLON type_specifier
         {
-            $$ = dkc_create_parameter($1, $2);
+            $$ = dkc_create_parameter($3, $1);
         }
-        | parameter_list COMMA type_specifier IDENTIFIER
+        | parameter_list COMMA IDENTIFIER COLON type_specifier
         {
-            $$ = dkc_chain_parameter($1, $3, $4);
+            $$ = dkc_chain_parameter($1, $5, $3);
         }
         ;
 argument_list
@@ -943,30 +946,35 @@ method_member
         }
         ;
 method_function_definition
-        : type_specifier IDENTIFIER LP parameter_list RP throws_clause block
+        : FN IDENTIFIER LP THIS_T COMMA parameter_list RP
+          ARROW type_specifier throws_clause block
         {
-            $$ = dkc_method_function_define($1, $2, $4, $6, $7);
+            $$ = dkc_method_function_define($9, $2, $6, $10, $11);
         }
-        | type_specifier IDENTIFIER LP RP throws_clause block
+        | FN IDENTIFIER LP THIS_T RP
+          ARROW type_specifier throws_clause block
         {
-            $$ = dkc_method_function_define($1, $2, NULL, $5, $6);
+            $$ = dkc_method_function_define($7, $2, NULL, $8, $9);
         }
-        | STATIC_T type_specifier IDENTIFIER LP parameter_list RP throws_clause block
+        | FN IDENTIFIER LP parameter_list RP
+          ARROW type_specifier throws_clause block
         {
-            $$ = dkc_static_method_function_define($2, $3, $5, $7, $8);
+            $$ = dkc_static_method_function_define($7, $2, $4, $8, $9);
         }
-        | STATIC_T type_specifier IDENTIFIER LP RP throws_clause block
+        | FN IDENTIFIER LP RP
+          ARROW type_specifier throws_clause block
         {
-            $$ = dkc_static_method_function_define($2, $3, NULL, $6, $7);
+            $$ = dkc_static_method_function_define($6, $2, NULL, $7, $8);
         }
-        | type_specifier IDENTIFIER LP parameter_list RP throws_clause
-          SEMICOLON
+        | FN IDENTIFIER LP THIS_T COMMA parameter_list RP
+          ARROW type_specifier throws_clause SEMICOLON
         {
-            $$ = dkc_method_function_define($1, $2, $4, $6, NULL);
+            $$ = dkc_method_function_define($9, $2, $6, $10, NULL);
         }
-        | type_specifier IDENTIFIER LP RP throws_clause SEMICOLON
+        | FN IDENTIFIER LP THIS_T RP
+          ARROW type_specifier throws_clause SEMICOLON
         {
-            $$ = dkc_method_function_define($1, $2, NULL, $5, NULL);
+            $$ = dkc_method_function_define($7, $2, NULL, $8, NULL);
         }
         ;
 throws_clause
@@ -1028,14 +1036,14 @@ initializer_opt
         }
         ;
 field_member
-        : type_specifier IDENTIFIER initializer_opt SEMICOLON
+        : IDENTIFIER COLON type_specifier initializer_opt SEMICOLON
         {
-            $$ = dkc_create_field_member(NULL, DVM_FALSE, $1, $2, $3);
+            $$ = dkc_create_field_member(NULL, DVM_FALSE, $3, $1, $4);
         }
-        | class_or_member_modifier_list type_specifier
-          IDENTIFIER initializer_opt SEMICOLON
+        | class_or_member_modifier_list IDENTIFIER COLON type_specifier
+          initializer_opt SEMICOLON
         {
-            $$ = dkc_create_field_member(&$1, DVM_FALSE, $2, $3, $4);
+            $$ = dkc_create_field_member(&$1, DVM_FALSE, $4, $2, $5);
         }
         | FINAL type_specifier IDENTIFIER initializer_opt SEMICOLON
         {
@@ -1048,14 +1056,15 @@ field_member
         }
         ;
 delegate_definition
-        : DELEGATE type_specifier IDENTIFIER LP parameter_list RP throws_clause
-          SEMICOLON
+        : DELEGATE FN IDENTIFIER LP parameter_list RP
+          ARROW type_specifier throws_clause SEMICOLON
         {
-            dkc_create_delegate_definition($2, $3, $5, $7);
+            dkc_create_delegate_definition($8, $3, $5, $9);
         }
-        | DELEGATE type_specifier IDENTIFIER LP RP throws_clause SEMICOLON
+        | DELEGATE FN IDENTIFIER LP RP
+          ARROW type_specifier throws_clause SEMICOLON
         {
-            dkc_create_delegate_definition($2, $3, NULL, $6);
+            dkc_create_delegate_definition($7, $3, NULL, $8);
         }
         ;
 enum_definition
