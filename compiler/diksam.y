@@ -51,7 +51,7 @@
 %type   <require_list> require_list require_declaration
 %type   <rename_list> rename_list rename_declaration
 %type   <parameter_list> parameter_list
-%type   <argument_list> argument_list
+%type   <argument_list> argument_list named_argument_list
 %type   <expression> expression expression_opt
         assignment_expression logical_and_expression logical_or_expression
         equality_expression relational_expression
@@ -255,6 +255,16 @@ argument_list
         | argument_list COMMA assignment_expression
         {
             $$ = dkc_chain_argument_list($1, $3);
+        }
+        ;
+named_argument_list
+        : IDENTIFIER COLON assignment_expression
+        {
+            $$ = dkc_create_named_argument_list($1, $3);
+        }
+        | named_argument_list COMMA IDENTIFIER COLON assignment_expression
+        {
+            $$ = dkc_chain_named_argument_list($1, $3, $5);
         }
         ;
 statement_list
@@ -505,6 +515,14 @@ primary_no_new_array
         | NEW IDENTIFIER DOT IDENTIFIER LP argument_list RP
         {
             $$ = dkc_create_new_expression($2, $4, $6);
+        }
+        | IDENTIFIER LC RC
+        {
+            $$ = dkc_create_new_expression($1, "instantiating_struct_constructor", NULL);
+        }
+        | IDENTIFIER LC named_argument_list RC
+        {
+            $$ = dkc_create_new_expression($1, "instantiating_struct_constructor", $3);
         }
         ;
 array_literal

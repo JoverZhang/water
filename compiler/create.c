@@ -321,6 +321,31 @@ dkc_chain_argument_list(ArgumentList *list, Expression *expr)
     return list;
 }
 
+ArgumentList *
+dkc_create_named_argument_list(char *name, Expression *expression)
+{
+    ArgumentList *al;
+
+    al = dkc_malloc(sizeof(ArgumentList));
+    al->name = name;
+    al->expression = expression;
+    al->next = NULL;
+
+    return al;
+}
+
+ArgumentList *
+dkc_chain_named_argument_list(ArgumentList *list, char *name, Expression *expr)
+{
+    ArgumentList *pos;
+
+    for (pos = list; pos->next; pos = pos->next)
+      ;
+    pos->next = dkc_create_named_argument_list(name, expr);
+
+    return list;
+}
+
 ExpressionList *
 dkc_create_expression_list(Expression *expression)
 {

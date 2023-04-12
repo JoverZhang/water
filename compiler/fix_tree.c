@@ -2881,6 +2881,77 @@ add_default_constructor(ClassDefinition *cd)
     }
 }
 
+
+static void
+add_instantiating_struct_constructor(ClassDefinition *cd) {
+    // compatible super class for old version
+    if (cd->super_class) {
+      return;
+    }
+
+    MemberDeclaration *tail = NULL;
+
+    TypeSpecifier *type = dkc_alloc_type_specifier(DVM_VOID_TYPE);
+
+    MemberDeclaration *member_pos;
+    for (member_pos = cd->member; member_pos;
+         member_pos = member_pos->next) {
+    }
+
+    ParameterList *parameter_list = NULL;
+    Block *block = dkc_alloc_block();
+    block->statement_list = NULL;
+    for (member_pos = cd->member; member_pos;
+         member_pos = member_pos->next) {
+        if (member_pos->kind == FIELD_MEMBER) {
+
+            // parameters
+            ParameterList *parameter = dkc_create_parameter(
+                member_pos->u.field.type,
+                member_pos->u.field.name);
+            if (parameter_list) {
+                parameter_list->next = parameter;
+            } else {
+                parameter_list = parameter;
+            }
+
+            // block
+            Expression *assign_expr = dkc_create_assign_expression(
+                    dkc_create_member_expression(dkc_create_this_expression(),
+                                                 parameter->name),
+                    NORMAL_ASSIGN,
+                    dkc_create_identifier_expression(parameter->name));
+
+            Statement *statement = dkc_alloc_statement(EXPRESSION_STATEMENT);
+            statement->u.expression_s = assign_expr;
+            StatementList *statement_list =
+                    dkc_create_statement_list(statement);
+
+            if (block->statement_list) {
+                block->statement_list->next =
+                        statement_list;
+            } else {
+                block->statement_list = statement_list;
+            }
+        }
+        tail = member_pos;
+    }
+
+    // create method member
+    ClassOrMemberModifierList modifier =
+        dkc_create_class_or_member_modifier(VIRTUAL_MODIFIER);
+
+    FunctionDefinition *fd = dkc_create_function_definition(
+        type, "instantiating_struct_constructor",
+        parameter_list, NULL, block);
+
+    if (tail) {
+      tail->next = dkc_create_method_member(&modifier, fd, DVM_TRUE);
+    } else {
+      cd->member = dkc_create_method_member(&modifier, fd, DVM_TRUE);
+    }
+}
+
 static void
 get_super_field_method_count(ClassDefinition *cd,
                              int *field_index_out, int *method_index_out)
@@ -2977,7 +3048,9 @@ fix_class_list(DKC_Compiler *compiler)
         if (class_pos->class_or_interface != DVM_CLASS_DEFINITION)
             continue;
         compiler->current_class_definition = class_pos;
+        // TODO: remove auto added default constructor
         add_default_constructor(class_pos);
+        add_instantiating_struct_constructor(class_pos);
         compiler->current_class_definition = NULL;
     }
 

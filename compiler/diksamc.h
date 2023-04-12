@@ -268,6 +268,7 @@ typedef struct RenameList_tag {
 } RenameList;
 
 typedef struct ArgumentList_tag {
+    char *name;
     Expression *expression;
     struct ArgumentList_tag *next;
 } ArgumentList;
@@ -911,6 +912,13 @@ ParameterList *dkc_chain_parameter(ParameterList *list, TypeSpecifier *type,
                                    char *identifier);
 ArgumentList *dkc_create_argument_list(Expression *expression);
 ArgumentList *dkc_chain_argument_list(ArgumentList *list, Expression *expr);
+ArgumentList *
+dkc_create_named_argument_list(char *name,
+                               Expression *expression);
+ArgumentList *
+dkc_chain_named_argument_list(ArgumentList *list,
+                              char *name,
+                              Expression *expr);
 ExpressionList *dkc_create_expression_list(Expression *expression);
 ExpressionList *dkc_chain_expression_list(ExpressionList *list,
                                           Expression *expr);
