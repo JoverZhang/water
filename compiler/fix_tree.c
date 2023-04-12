@@ -193,6 +193,42 @@ static DVM_Boolean
 check_type_compatibility(TypeSpecifier *super_t, TypeSpecifier *sub_t);
 
 static DVM_Boolean
+compare_function_definition(FunctionDefinition *f1, FunctionDefinition *f2) {
+    if (f1 == f2) {
+        return DVM_TRUE;
+    }
+
+    // name
+    if (!dvm_compare_string(f1->name, f2->name)) {
+        return DVM_FALSE;
+    }
+
+    // return type
+    if (!dkc_compare_type(f1->type, f2->type)) {
+        return DVM_FALSE;
+    }
+
+    // parameters
+    ParameterList *f1_param = f1->parameter;
+    ParameterList *f2_param = f2->parameter;
+    while (f1_param) {
+        if (!f2_param) {
+            return DVM_FALSE;
+        }
+        if (!dkc_compare_type(f1_param->type, f2_param->type)) {
+            return DVM_FALSE;
+        }
+        f1_param = f1_param->next;
+        f2_param = f2_param->next;
+    }
+
+    if (f2_param) {
+        return DVM_FALSE;
+    }
+    return DVM_TRUE;
+}
+
+static DVM_Boolean
 is_super_interface(ClassDefinition *child, ClassDefinition *parent,
                    int *interface_index_out)
 {
@@ -206,7 +242,46 @@ is_super_interface(ClassDefinition *child, ClassDefinition *parent,
         }
         interface_index++;
     }
-    return DVM_FALSE;
+
+    // interface inference
+    for (MemberDeclaration *p_member = parent->member;
+            p_member; p_member = p_member->next) {
+
+        if (p_member->kind != METHOD_MEMBER) {
+            continue;
+        }
+
+        DVM_Boolean is_match = DVM_FALSE;
+        for (MemberDeclaration *c_member = child->member;
+                c_member; c_member = c_member->next) {
+            if (c_member->kind != METHOD_MEMBER) {
+                continue;
+            }
+            if (compare_function_definition(
+                    p_member->u.method.function_definition,
+                    c_member->u.method.function_definition)) {
+                is_match = DVM_TRUE;
+                break;
+            }
+        }
+
+        if (!is_match) {
+            return DVM_FALSE;
+        }
+    }
+
+    // append interface to interface_list of child
+    ExtendsList *interface_list = dkc_create_extends_list(parent->name);
+    interface_list->class_definition = parent;
+    if (pos) {
+        pos->next = interface_list;
+        *interface_index_out = interface_index + 1;
+    } else {
+        child->interface_list = interface_list;
+        *interface_index_out = 0;
+    }
+
+    return DVM_TRUE;
 }
 
 static DVM_Boolean

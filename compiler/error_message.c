@@ -15,7 +15,7 @@ ErrorDefinition dkc_error_message_format[] = {
     {"Variable or function $(name) not found."},
     {"$(name) is a function name, but parentheses are missing for function call."},
     {"Cannot cast to or from derived type."},
-    {"Cannot cast from $(src) to $(dest)."},
+    {"Cannot cast because $(src) does not implement $(dest)."},
     {"Invalid operand type for arithmetic operator."},
     {"Invalid operand type for comparison operator."},
     {"Invalid operand type for logical and/or operator."},
