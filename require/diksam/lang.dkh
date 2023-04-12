@@ -40,7 +40,7 @@ abstract public class Exception {
     public string message;
     public StackTrace[] stack_trace;
     public void print_stack_trace() {
-	int i;
+	let i: int;
 	println("Exception occured. " + this.message);
 	for (i = 0; i < this.stack_trace.size(); i++) {
 	    println("\tat " 

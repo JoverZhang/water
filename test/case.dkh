@@ -39,7 +39,7 @@ public class Point {
   public string to_string() { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
 }
 void test_class_method() {
-  Point point = new Point(10, 20);
+  let point = new Point(10, 20);
   test_assert("Point(x = 10, y = 20)" == point.to_string());
 
   println("success: test_class_method()");
@@ -68,7 +68,7 @@ class FieldInitClass {
   public int y = 10;
 }
 void test_class_field_init() {
-  FieldInitClass o = new FieldInitClass();
+  let o = new FieldInitClass();
   test_assert(0 == o.x);
   test_assert(10 == o.y);
   println("success: test_class_field_init()");
@@ -85,7 +85,7 @@ class ToStringClass : ToString {
   public string to_string() { return "ToStringClass()"; }
 }
 void test_interface() {
-  ToString o = new ToStringClass();
+  let o: ToString = new ToStringClass();
   test_assert("ToStringClass()" == o.to_string());
 
   println("success: test_interface()");
@@ -111,7 +111,7 @@ class Child : Parent {
 }
 
 void test_class_subclass() {
-  Child child = new Child(10, 20);
+  let child = new Child(10, 20);
   test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_string());
 
   println("success: test_class_subclass()");
@@ -121,9 +121,9 @@ test_class_subclass();
 ///////////////////////////////////////////////////////////////////////////////
 // variables
 void test_variables() {
-  int i = 10;
-  double f = 30.2;
-  string s = "Hello ";
+  let i = 10;
+  let f = 30.2;
+  let s = "Hello ";
   test_assert(40.2 == i + f);
   i = i + f;
   test_assert("Hello 40" == s + i);
@@ -135,26 +135,26 @@ test_variables();
 ///////////////////////////////////////////////////////////////////////////////
 // array
 void test_array() {
-  int[] int_arr = { 1, 2, 3 };
+  let int_arr = { 1, 2, 3 };
   test_assert(3 == int_arr.size());
   test_assert(1 == int_arr[0]);
   test_assert(2 == int_arr[1]);
   test_assert(3 == int_arr[2]);
 
-  double[] double_arr = { 1.0, 2, 3 };
+  let double_arr = { 0.1, 2, 3 };
   test_assert(3 == double_arr.size());
-  test_assert(1 == double_arr[0]);
+  test_assert(0.1 == double_arr[0]);
   test_assert(2 == double_arr[1]);
   test_assert(3 == double_arr[2]);
 
-  string str = "Hello World";
+  let str = "Hello World";
   test_assert(11 == str.length());
   test_assert("World" == str.substr(6, 5));
   test_assert(5 == str.substr(6, 5).length());
 
-  Point p1 = new Point(10, 10);
-  Point p3 = new Point(30, 30);
-  Point[] point_arr = { p1, new Point(20, 20), p3 };
+  let p1 = new Point(10, 10);
+  let p3 = new Point(30, 30);
+  let point_arr = { p1, new Point(20, 20), p3 };
   test_assert(3 == point_arr.size());
   test_assert(p1 == point_arr[0]);
   test_assert(p3 == point_arr[2]);
@@ -166,9 +166,9 @@ test_array();
 ///////////////////////////////////////////////////////////////////////////////
 // cast
 void test_cast() {
-  Child child = new Child(10, 20);
-  Parent parent1 = child;
-  Parent parent2 = child;
+  let child = new Child(10, 20);
+  let parent1: Parent = child;
+  let parent2: Parent = child;
   test_assert(parent1 == parent2);
 
   println("success: test_cast()");
@@ -178,8 +178,8 @@ test_cast();
 ///////////////////////////////////////////////////////////////////////////////
 // downcast
 void test_downcast() {
-  ToStringClass o = new ToStringClass();
-  ToString t = o;
+  let o = new ToStringClass();
+  let t: ToString = o;
   o = t.(ToStringClass);
   test_assert("ToStringClass()" == t.(ToStringClass).to_string());
 
@@ -190,11 +190,11 @@ test_downcast();
 ///////////////////////////////////////////////////////////////////////////////
 // instanceof
 void test_instanceof() {
-  ToString o = new ToStringClass();
+  let o: ToString = new ToStringClass();
   test_assert(o instanceof ToStringClass);
   // test_assert(o instanceof ToString); // always is true
 
-  Parent child = new Child(10, 20);
+  let child: Parent = new Child(10, 20);
   test_assert(child instanceof Child);
   // test_assert(child instanceof Parent); // always is true
 
@@ -210,12 +210,12 @@ class DelegateClass {
   public DelegateF2I f;
 }
 void test_delegate() {
-  DelegateF2I f = f2i;
+  let f: DelegateF2I = f2i;
   test_assert(42 == f(42.2));
 
-  DelegateClass o = new DelegateClass();
+  let o = new DelegateClass();
   o.f = f2i;
-  DelegateF2I g = o.f;
+  let g = o.f;
   test_assert(42 == g(42.2));
 
   println("success: test_delegate()");
@@ -230,9 +230,9 @@ enum Color {
   BLUE,
 }
 void test_enum() {
-  Color red = Color.RED;
-  Color green = Color.GREEN;
-  Color blue = Color.BLUE;
+  let red = Color.RED;
+  let green = Color.GREEN;
+  let blue = Color.BLUE;
   test_assert(Color.RED == red);
   test_assert("RED" == "" + Color.RED);
   test_assert(red != green);
@@ -245,8 +245,8 @@ test_enum();
 ///////////////////////////////////////////////////////////////////////////////
 // for loop
 void test_for_loop() {
-  int n = 0;
-  int i;
+  let n = 0;
+  let i: int;
   for (i = 0; i <= 100; i++) { n += i; }
   test_assert(5050 == n);
 
@@ -257,7 +257,7 @@ test_for_loop();
 ///////////////////////////////////////////////////////////////////////////////
 // do while loop
 void test_while_loop() {
-  int n = 0; int i = 0;
+  let n = 0; let i = 0;
   while (i <= 100) { n += i; i++; }
   test_assert(5050 == n);
 
@@ -306,7 +306,7 @@ test_switch();
 class TestException : Exception {}
 void test_exception_f() throws Exception { throw new TestException(); }
 void test_exception() {
-  int n = 2;
+  let n = 2;
   try {
     test_exception_f();
     test_assert(false);
@@ -329,7 +329,7 @@ test_exception();
 class TestRuntimeException : RuntimeException {}
 void test_runtime_exception_f() { throw new TestRuntimeException(); }
 void test_runtime_exception() {
-  int n = 2;
+  let n = 2;
   try {
     test_runtime_exception_f();
     test_assert(false);
@@ -350,8 +350,8 @@ test_runtime_exception();
 ///////////////////////////////////////
 //// null pointer exception
 void test_null_pointer_exception() {
-  int n = 1;
-  ToStringClass o;
+  let n = 1;
+  let o: ToStringClass;
   try {
     o.to_string();
   } catch(NullPointerException e) {
@@ -365,7 +365,7 @@ test_null_pointer_exception();
 
 ///////////////////////////////////////////////////////////////////////////////
 // global variable
-int global_i = 10;
+let global_i = 10;
 void test_global_variable() {
   test_assert(10 == global_i);
   global_i = 20;
@@ -378,9 +378,9 @@ test_global_variable();
 ///////////////////////////////////////////////////////////////////////////////
 // native pointer (File)
 void test_native_pointer() {
-  File fd = fopen("test/hello.txt", "r");
-  string[] contents = new string[0];
-  string str;
+  let fd = fopen("test/hello.txt", "r");
+  let contents = new string[0];
+  let str: string;
   while ((str = fgets(fd)) != null) {
     contents.add(str);
   }

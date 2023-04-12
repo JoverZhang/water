@@ -2719,15 +2719,31 @@ fix_statement(Block *current_block, Statement *statement,
     case DECLARATION_STATEMENT:
         add_declaration(current_block, statement->u.declaration_s, fd,
                         statement->line_number, DVM_FALSE);
-        fix_type_specifier(statement->u.declaration_s->type);
+
+        DBG_assert(statement->u.declaration_s->type
+                            || statement->u.declaration_s->initializer,
+                        ("bad declaration\n"));
+
+        if (statement->u.declaration_s->type) {
+            fix_type_specifier(statement->u.declaration_s->type);
+        }
+
         if (statement->u.declaration_s->initializer) {
             statement->u.declaration_s->initializer
                 = fix_expression(current_block,
                                  statement->u.declaration_s->initializer,
                                  NULL, el_p);
-            statement->u.declaration_s->initializer
-                = create_assign_cast(statement->u.declaration_s->initializer,
-                                     statement->u.declaration_s->type);
+
+            if (statement->u.declaration_s->type) {
+                statement->u.declaration_s->initializer
+                    = create_assign_cast(
+                            statement->u.declaration_s->initializer,
+                            statement->u.declaration_s->type);
+            } else {
+                // inference type
+                statement->u.declaration_s->type
+                    = statement->u.declaration_s->initializer->type;
+            }
         }
         break;
     case STATEMENT_TYPE_COUNT_PLUS_1: /* FALLTHRU */

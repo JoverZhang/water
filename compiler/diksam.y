@@ -46,7 +46,7 @@
         NEW REQUIRE RENAME
         CLASS_T INTERFACE_T PUBLIC_T PRIVATE_T VIRTUAL_T OVERRIDE_T
         ABSTRACT_T STATIC_T THIS_T SUPER_T CONSTRUCTOR INSTANCEOF
-        STATIC_ACCESS DELEGATE FINAL ENUM CONST
+        STATIC_ACCESS DELEGATE FINAL ENUM CONST LET
 %type   <package_name> package_name
 %type   <require_list> require_list require_declaration
 %type   <rename_list> rename_list rename_declaration
@@ -789,13 +789,17 @@ throw_statement
         }
         ;
 declaration_statement
-        : type_specifier IDENTIFIER SEMICOLON
+        : LET IDENTIFIER COLON type_specifier SEMICOLON
         {
-            $$ = dkc_create_declaration_statement(DVM_FALSE, $1, $2, NULL);
+            $$ = dkc_create_declaration_statement(DVM_FALSE, $4, $2, NULL);
         }
-        | type_specifier IDENTIFIER ASSIGN_T expression SEMICOLON
+        | LET IDENTIFIER COLON type_specifier ASSIGN_T expression SEMICOLON
         {
-            $$ = dkc_create_declaration_statement(DVM_FALSE, $1, $2, $4);
+            $$ = dkc_create_declaration_statement(DVM_FALSE, $4, $2, $6);
+        }
+        | LET IDENTIFIER ASSIGN_T expression SEMICOLON
+        {
+            $$ = dkc_create_declaration_statement(DVM_FALSE, NULL, $2, $4);
         }
         | FINAL type_specifier IDENTIFIER SEMICOLON
         {

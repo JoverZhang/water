@@ -150,6 +150,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"enum"         return ENUM;
 <INITIAL>"final"        return FINAL;
 <INITIAL>"const"        return CONST;
+<INITIAL>"let"          return LET;
 <INITIAL>"("            return LP;
 <INITIAL>")"            return RP;
 <INITIAL>"{"            return LC;

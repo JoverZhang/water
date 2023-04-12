@@ -6,7 +6,7 @@ void __fputs(string str, native_pointer fp);
 void __fclose(native_pointer fp);
 
 File fopen(string file_name, string mode) {
-    native_pointer fp = __fopen(file_name, mode);
+    let fp = __fopen(file_name, mode);
     if (fp == null) {
 	return null;
     } else {
