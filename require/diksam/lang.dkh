@@ -1,46 +1,46 @@
-fn print(str: string) -> void;
-fn println(str: string) -> void {
-  print(str + "\n");
+fn print(s: str) -> void;
+fn println(s: str) -> void {
+  print(s + "\n");
 }
 
-public class File {
+pub struct File {
   fp: native_pointer;
   constructor initialize(fp: native_pointer) {
     this.fp = fp;
   }
 }
 
-fn fopen(file_name: string, mode: string) -> File;
-fn fgets(file: File) -> string;
-fn fputs(str: string, file: File) -> void;
+fn fopen(file_name: str, mode: str) -> File;
+fn fgets(file: File) -> str;
+fn fputs(s: str, file: File) -> void;
 fn fclose(file: File) -> void;
 
-fn to_double(int_value: int) -> double {
-  return int_value;
+fn to_f64(i32_value: i32) -> f64 {
+  return i32_value;
 }
 
-fn to_int(double_value: double) -> int {
-  return double_value;
+fn to_i32(f64_value: f64) -> i32 {
+  return f64_value;
 }
 
-fn parse_int(str: string) -> int throws NumberFormatException;
-fn parse_double(str: string) -> double throws NumberFormatException;
+fn parse_int(s: str) -> i32 throws NumberFormatException;
+fn parse_f64(s: str) -> f64 throws NumberFormatException;
 
-fn exit(status: int) -> void;
+fn exit(status: i32) -> void;
 fn randomize() -> void;
-fn random(range: int) -> int;
+fn random(range: i32) -> i32;
 
-class StackTrace {
-  line_number: int;
-  file_name: string;
-  function_name: string;
+struct StackTrace {
+  line_number: i32;
+  file_name: str;
+  function_name: str;
 }
 
-abstract public class Exception {
-  public message: string;
-  public stack_trace: StackTrace[];
-  public fn print_stack_trace(this) -> void {
-    let i: int;
+abstract pub struct Exception {
+  pub message: str;
+  pub stack_trace: StackTrace[];
+  pub fn print_stack_trace(this) -> void {
+    let i: i32;
     println("Exception occured. " + this.message);
     for (i = 0; i < this.stack_trace.size(); i++) {
       println("\tat "
@@ -50,42 +50,42 @@ abstract public class Exception {
         + ")");
     }
   }
-  public virtual constructor initialize() {
+  pub virtual constructor initialize() {
     this.stack_trace = new StackTrace[0];
   }
 }
 
-abstract public class BugException : Exception {
+abstract pub struct BugException : Exception {
 }
 
-abstract public class RuntimeException : Exception {
+abstract pub struct RuntimeException : Exception {
 }
 
-public class NullPointerException : BugException {
+pub struct NullPointerException : BugException {
 }
 
-public class ArrayIndexOutOfBoundsException : BugException {
+pub struct ArrayIndexOutOfBoundsException : BugException {
 }
 
-public class StringIndexOutOfBoundsException : BugException {
+pub struct StringIndexOutOfBoundsException : BugException {
 }
 
-public class DivisionByZeroException : RuntimeException {
+pub struct DivisionByZeroException : RuntimeException {
 }
 
-public class MultibyteCharacterConvertionException : RuntimeException {
+pub struct MultibyteCharacterConvertionException : RuntimeException {
 }
 
-public class ClassCastException : BugException {
+pub struct ClassCastException : BugException {
 }
 
-public abstract class ApplicationException : Exception {
+pub abstract struct ApplicationException : Exception {
 }
 
-public class NumberFormatException : ApplicationException {
+pub struct NumberFormatException : ApplicationException {
 }
 
-delegate fn HogeDelegate(value: int) -> int;
+delegate fn HogeDelegate(value: i32) -> i32;
 
 // BUGBUG for test routine
 fn test_native(dele: HogeDelegate) -> void;

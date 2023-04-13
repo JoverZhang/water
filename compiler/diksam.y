@@ -639,9 +639,9 @@ elsif_list
         }
         ;
 elsif
-        : ELSIF LP expression RP block
+        : ELSE IF LP expression RP block
         {
-            $$ = dkc_create_elsif($3, $5);
+            $$ = dkc_create_elsif($4, $6);
         }
         ;
 label_opt

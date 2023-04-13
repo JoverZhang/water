@@ -12,7 +12,7 @@ assert2(true, "failed to rename function");
 
 ///////////////////////////////////////////////////////////////////////////////
 // function
-fn fibonacci(n: int) -> int {
+fn fibonacci(n: i32) -> i32 {
   if (n == 1 || n == 2) { return 1; }
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
@@ -28,19 +28,19 @@ test_function();
 
 ///////////////////////////////////////
 //// method
-public class Point {
-  private x: int;
-  private y: int;
-  public constructor initialize(x: int, y: int) { this.x = x; this.y = y; }
-  public fn get_x(this) -> int { return this.x; }
-  public fn set_x(this, x: int) -> int { this.x = x; }
-  public fn get_y(this) -> int { return this.y; }
-  public fn set_y(this, y: int) -> int { this.y = y; }
-  public fn to_string(this) -> string { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
+pub struct Point {
+  private x: i32;
+  private y: i32;
+  pub constructor initialize(x: i32, y: i32) { this.x = x; this.y = y; }
+  pub fn get_x(this) -> i32 { return this.x; }
+  pub fn set_x(this, x: i32) -> i32 { this.x = x; }
+  pub fn get_y(this) -> i32 { return this.y; }
+  pub fn set_y(this, y: i32) -> i32 { this.y = y; }
+  pub fn to_str(this) -> str { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
 }
 fn test_class_method() -> void {
   let point = new Point(10, 20);
-  test_assert("Point(x = 10, y = 20)" == point.to_string());
+  test_assert("Point(x = 10, y = 20)" == point.to_str());
 
   println("success: test_class_method()");
 }
@@ -48,10 +48,10 @@ test_class_method();
 
 ///////////////////////////////////////
 //// multi constructor
-class MultiConstructorClass {
-  public n: int;
-  public constructor initialize() { this.n = 1; }
-  public constructor initialize2() { this.n = 2; }
+struct MultiConstructorClass {
+  pub n: i32;
+  pub constructor initialize() { this.n = 1; }
+  pub constructor initialize2() { this.n = 2; }
 }
 fn test_class_multi_constructor() -> void {
   test_assert(1 == new MultiConstructorClass().n);
@@ -63,9 +63,9 @@ test_class_multi_constructor();
 
 ///////////////////////////////////////
 //// field init
-class FieldInitClass {
-  public x: int;
-  public y: int = 10;
+struct FieldInitClass {
+  pub x: i32;
+  pub y: i32 = 10;
 }
 fn test_class_field_init() -> void {
   let o = new FieldInitClass();
@@ -78,41 +78,41 @@ test_class_field_init();
 ///////////////////////////////////////
 //// interface
 interface ToString {
-  fn to_string(this) -> string;
+  fn to_str(this) -> str;
 }
-class ToStringClass : ToString {
+struct ToStringClass : ToString {
   override
-  public fn to_string(this) -> string { return "ToStringClass()"; }
+  pub fn to_str(this) -> str { return "ToStringClass()"; }
 }
 fn test_interface() -> void {
   let o: ToString = new ToStringClass();
-  test_assert("ToStringClass()" == o.to_string());
+  test_assert("ToStringClass()" == o.to_str());
 
   println("success: test_interface()");
 }
 test_interface();
 
 ///////////////////////////////////////
-//// subclass (keywords: virtual, override and super)
-abstract class Parent {
-  private pv: int;
+//// substruct (keywords: virtual, override and super)
+abstract struct Parent {
+  private pv: i32;
   virtual
-  public constructor initialize(pv: int) { this.pv = pv; }
+  pub constructor initialize(pv: i32) { this.pv = pv; }
   virtual
-  public fn to_string(this) -> string { return "Parent(pv = " + this.pv + ")"; }
+  pub fn to_str(this) -> str { return "Parent(pv = " + this.pv + ")"; }
 }
 
-class Child : Parent {
-  private cv: int;
+struct Child : Parent {
+  private cv: i32;
   override
-  public constructor initialize(pv: int, cv: int) { super.initialize(pv); this.cv = cv; }
+  pub constructor initialize(pv: i32, cv: i32) { super.initialize(pv); this.cv = cv; }
   override
-  public fn to_string(this) -> string { return "Child(" + super.to_string() + ", cv = " + this.cv + ")"; }
+  pub fn to_str(this) -> str { return "Child(" + super.to_str() + ", cv = " + this.cv + ")"; }
 }
 
 fn test_class_subclass() -> void {
   let child = new Child(10, 20);
-  test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_string());
+  test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_str());
 
   println("success: test_class_subclass()");
 }
@@ -135,22 +135,22 @@ test_variables();
 ///////////////////////////////////////////////////////////////////////////////
 // array
 fn test_array() -> void {
-  let int_arr = { 1, 2, 3 };
-  test_assert(3 == int_arr.size());
-  test_assert(1 == int_arr[0]);
-  test_assert(2 == int_arr[1]);
-  test_assert(3 == int_arr[2]);
+  let i32_arr = { 1, 2, 3 };
+  test_assert(3 == i32_arr.size());
+  test_assert(1 == i32_arr[0]);
+  test_assert(2 == i32_arr[1]);
+  test_assert(3 == i32_arr[2]);
 
-  let double_arr = { 0.1, 2, 3 };
-  test_assert(3 == double_arr.size());
-  test_assert(0.1 == double_arr[0]);
-  test_assert(2 == double_arr[1]);
-  test_assert(3 == double_arr[2]);
+  let f64_arr = { 0.1, 2, 3 };
+  test_assert(3 == f64_arr.size());
+  test_assert(0.1 == f64_arr[0]);
+  test_assert(2 == f64_arr[1]);
+  test_assert(3 == f64_arr[2]);
 
-  let str = "Hello World";
-  test_assert(11 == str.length());
-  test_assert("World" == str.substr(6, 5));
-  test_assert(5 == str.substr(6, 5).length());
+  let s = "Hello World";
+  test_assert(11 == s.length());
+  test_assert("World" == s.substr(6, 5));
+  test_assert(5 == s.substr(6, 5).length());
 
   let p1 = new Point(10, 10);
   let p3 = new Point(30, 30);
@@ -181,7 +181,7 @@ fn test_downcast() -> void {
   let o = new ToStringClass();
   let t: ToString = o;
   o = t.(ToStringClass);
-  test_assert("ToStringClass()" == t.(ToStringClass).to_string());
+  test_assert("ToStringClass()" == t.(ToStringClass).to_str());
 
   println("success: test_downcast()");
 }
@@ -204,10 +204,10 @@ test_instanceof();
 
 ///////////////////////////////////////////////////////////////////////////////
 // delegate
-delegate fn DelegateF2I(f: double) -> int;
-fn f2i(f: double) -> int { return f; }
-class DelegateClass {
-  public f: DelegateF2I;
+delegate fn DelegateF2I(f: f64) -> i32;
+fn f2i(f: f64) -> i32 { return f; }
+struct DelegateClass {
+  pub f: DelegateF2I;
 }
 fn test_delegate() -> void {
   let f: DelegateF2I = f2i;
@@ -246,7 +246,7 @@ test_enum();
 // for loop
 fn test_for_loop() -> void {
   let n = 0;
-  let i: int;
+  let i: i32;
   for (i = 0; i <= 100; i++) { n += i; }
   test_assert(5050 == n);
 
@@ -271,9 +271,9 @@ test_while_loop();
 
 ///////////////////////////////////////////////////////////////////////////////
 // if
-fn test_if_compare(x: int, y: int) -> int {
+fn test_if_compare(x: i32, y: i32) -> i32 {
   if (x > y) { return 1; }
-  elsif (x < y) { return -1; }
+  else if (x < y) { return -1; }
   else { return 0; }
 }
 fn test_if() -> void {
@@ -286,7 +286,7 @@ test_if();
 
 ///////////////////////////////////////////////////////////////////////////////
 // switch
-fn test_switch_color(color: Color) -> string {
+fn test_switch_color(color: Color) -> str {
   switch (color)
     case Color.RED { return "RED"; }
     case Color.GREEN { return "GREEN"; }
@@ -303,7 +303,7 @@ test_switch();
 // exception
 ///////////////////////////////////////
 //// throw exception
-class TestException : Exception {}
+struct TestException : Exception {}
 fn test_exception_f() -> void throws Exception { throw new TestException(); }
 fn test_exception() -> void {
   let n = 2;
@@ -326,7 +326,7 @@ test_exception();
 
 ///////////////////////////////////////
 //// throw runtime exception
-class TestRuntimeException : RuntimeException {}
+struct TestRuntimeException : RuntimeException {}
 fn test_runtime_exception_f() -> void { throw new TestRuntimeException(); }
 fn test_runtime_exception() -> void {
   let n = 2;
@@ -353,7 +353,7 @@ fn test_null_pointer_exception() -> void {
   let n = 1;
   let o: ToStringClass;
   try {
-    o.to_string();
+    o.to_str();
   } catch(NullPointerException e) {
     n = 0;
   }
@@ -379,10 +379,10 @@ test_global_variable();
 // native pointer (File)
 fn test_native_pointer() -> void {
   let fd = fopen("test/hello.txt", "r");
-  let contents = new string[0];
-  let str: string;
-  while ((str = fgets(fd)) != null) {
-    contents.add(str);
+  let contents = new str[0];
+  let s: str;
+  while ((s = fgets(fd)) != null) {
+    contents.add(s);
   }
   test_assert(2 == contents.size());
   test_assert("hello\n" == contents[0]);
@@ -394,7 +394,7 @@ test_native_pointer();
 
 ///////////////////////////////////////////////////////////////////////////////
 // native call
-fn hoge(v: int) -> int { return v; }
+fn hoge(v: i32) -> i32 { return v; }
 fn test_native_call() -> void {
   test_native(hoge);
 

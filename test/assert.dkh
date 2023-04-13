@@ -1,15 +1,15 @@
-class Panic : RuntimeException {
+struct Panic : RuntimeException {
   override
-  public constructor initialize(message: string) {
+  pub constructor initialize(message: str) {
     this.message = message;
   }
 }
 
-fn panic(message: string) -> void {
+fn panic(message: str) -> void {
   throw new Panic("panic");
 }
 
-fn assert(expression: boolean, message: string) -> void {
+fn assert(expression: boolean, message: str) -> void {
   if (!expression) {
     panic(message);
   }
