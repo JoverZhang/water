@@ -12,9 +12,8 @@ add_custom_command(
         DEPENDS builtin_conv
         head.txt
         tail.txt
-        ../../require/diksam/lang.dkh
-        ../../require/diksam/lang.dkm
-        ../../require/diksam/math.dkh
+        ../../require/water/lang.water
+        ../../require/water/math.water
 )
 
 add_library(builtin OBJECT

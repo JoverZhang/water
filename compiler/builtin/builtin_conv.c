@@ -12,9 +12,8 @@ typedef struct {
 } TargetPackage;
 
 static TargetPackage st_target_package[] = {
-    {"diksam.lang", "dkh"},
-    {"diksam.lang", "dkm"},
-    {"diksam.math", "dkh"}
+    {"water.lang", "water"},
+    {"water.math", "water"}
 };
 
 static void
@@ -124,10 +123,10 @@ main(int argc, char **argv)
     for (i = 0; i < sizeof(st_target_package) / sizeof(TargetPackage); i++) {
         char *suffix;
         conv_period(st_target_package[i].package_name, variable_name, '_');
-        if (!strcmp(st_target_package[i].suffix, "dkh")) {
+        if (!strcmp(st_target_package[i].suffix, "water")) {
             suffix = "DKH_SOURCE";
         } else {
-            DBG_assert(!strcmp(st_target_package[i].suffix, "dkm"),
+            DBG_assert(!strcmp(st_target_package[i].suffix, "waterm"),
                        ("suffix..%s\n", st_target_package[i].suffix));
             suffix = "DKM_SOURCE";
         }

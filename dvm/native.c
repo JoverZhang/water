@@ -9,7 +9,7 @@
 static void file_finalizer(DVM_VirtualMachine *dvm, DVM_Object* obj);
 
 static DVM_NativePointerInfo st_file_type_info = {
-    "diksam.lang.file_pointer",
+    "water.lang.file_pointer",
     file_finalizer
 };
 
@@ -782,66 +782,66 @@ nv_test_native_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 void
 dvm_add_native_functions(DVM_VirtualMachine *dvm)
 {
-    DVM_add_native_function(dvm, "diksam.lang", "print", nv_print_proc, 1,
+    DVM_add_native_function(dvm, "water.lang", "print", nv_print_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "__fopen", nv_fopen_proc, 2,
+    DVM_add_native_function(dvm, "water.lang", "__fopen", nv_fopen_proc, 2,
                             DVM_FALSE, DVM_TRUE);
-    DVM_add_native_function(dvm, "diksam.lang", "__fgets", nv_fgets_proc, 1,
+    DVM_add_native_function(dvm, "water.lang", "__fgets", nv_fgets_proc, 1,
                             DVM_FALSE, DVM_TRUE);
-    DVM_add_native_function(dvm, "diksam.lang", "__fputs", nv_fputs_proc, 2,
+    DVM_add_native_function(dvm, "water.lang", "__fputs", nv_fputs_proc, 2,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "__fclose", nv_fclose_proc, 1,
+    DVM_add_native_function(dvm, "water.lang", "__fclose", nv_fclose_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "exit", nv_exit_proc, 1,
+    DVM_add_native_function(dvm, "water.lang", "exit", nv_exit_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "randomize",
+    DVM_add_native_function(dvm, "water.lang", "randomize",
                             nv_randomize_proc, 0,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "random", nv_random_proc, 1,
+    DVM_add_native_function(dvm, "water.lang", "random", nv_random_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "parse_int", nv_parse_int_proc,
+    DVM_add_native_function(dvm, "water.lang", "parse_int", nv_parse_int_proc,
                             1, DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.lang", "parse_double",
+    DVM_add_native_function(dvm, "water.lang", "parse_double",
                             nv_parse_double_proc, 1, DVM_FALSE, DVM_FALSE);
     
     /* math.dkh */
-    DVM_add_native_function(dvm, "diksam.math", "fabs", nv_fabs_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "fabs", nv_fabs_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "pow", nv_pow_proc, 2,
+    DVM_add_native_function(dvm, "water.math", "pow", nv_pow_proc, 2,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "fmod", nv_fmod_proc, 2,
+    DVM_add_native_function(dvm, "water.math", "fmod", nv_fmod_proc, 2,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "ceil", nv_ceil_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "ceil", nv_ceil_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "floor", nv_floor_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "floor", nv_floor_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "sqrt", nv_sqrt_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "sqrt", nv_sqrt_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "exp", nv_exp_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "exp", nv_exp_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "log10", nv_log10_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "log10", nv_log10_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "log", nv_log_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "log", nv_log_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "sin", nv_sin_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "sin", nv_sin_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "cos", nv_cos_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "cos", nv_cos_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "tan", nv_tan_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "tan", nv_tan_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "asin", nv_asin_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "asin", nv_asin_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "acos", nv_acos_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "acos", nv_acos_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "atan", nv_atan_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "atan", nv_atan_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "atan2", nv_atan2_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "atan2", nv_atan2_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "sinh", nv_sinh_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "sinh", nv_sinh_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "cosh", nv_cosh_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "cosh", nv_cosh_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "diksam.math", "tanh", nv_tanh_proc, 1,
+    DVM_add_native_function(dvm, "water.math", "tanh", nv_tanh_proc, 1,
                             DVM_FALSE, DVM_FALSE);
 
     DVM_add_native_function(dvm, BUILT_IN_METHOD_PACKAGE_NAME,
@@ -867,7 +867,7 @@ dvm_add_native_functions(DVM_VirtualMachine *dvm)
                             STRING_PREFIX STRING_METHOD_SUBSTR,
                             nv_string_substr_proc, 2, DVM_TRUE, DVM_FALSE);
 
-    DVM_add_native_function(dvm, "diksam.lang", "test_native",
+    DVM_add_native_function(dvm, "water.lang", "test_native",
                             nv_test_native_proc, 1,
                             DVM_FALSE, DVM_FALSE);
 }
