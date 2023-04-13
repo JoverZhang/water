@@ -136,13 +136,13 @@ test_variables();
 ///////////////////////////////////////////////////////////////////////////////
 // array
 fn test_array() -> void {
-  let i32_arr = { 1, 2, 3 };
+  let i32_arr = [ 1, 2, 3 ];
   test_assert(3 == i32_arr.size());
   test_assert(1 == i32_arr[0]);
   test_assert(2 == i32_arr[1]);
   test_assert(3 == i32_arr[2]);
 
-  let f64_arr = { 0.1, 2, 3 };
+  let f64_arr = [ 0.1, 2, 3 ];
   test_assert(3 == f64_arr.size());
   test_assert(0.1 == f64_arr[0]);
   test_assert(2 == f64_arr[1]);
@@ -155,7 +155,7 @@ fn test_array() -> void {
 
   let p1 = New Point(10, 10);
   let p3 = New Point(30, 30);
-  let point_arr = { p1, New Point(20, 20), p3 };
+  let point_arr = [ p1, New Point(20, 20), p3 ];
   test_assert(3 == point_arr.size());
   test_assert(p1 == point_arr[0]);
   test_assert(p3 == point_arr[2]);

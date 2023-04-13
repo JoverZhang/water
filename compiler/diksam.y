@@ -529,15 +529,15 @@ primary_no_new_array
         }
         ;
 array_literal
-        : LC RC
+        : LB RB
         {
             $$ = dkc_create_array_literal_expression(NULL);
         }
-        | LC expression_list RC
+        | LB expression_list RB
         {
             $$ = dkc_create_array_literal_expression($2);
         }
-        | LC expression_list COMMA RC
+        | LB expression_list COMMA RB
         {
             $$ = dkc_create_array_literal_expression($2);
         }
