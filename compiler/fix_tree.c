@@ -1613,7 +1613,7 @@ check_member_accessibility(int line_number,
 
     if (compiler->current_class_definition == NULL
         || compiler->current_class_definition != target_class) {
-        if (member->access_modifier == DVM_PRIVATE_ACCESS) {
+        if (member->access_modifier != DVM_PUBLIC_ACCESS) {
             dkc_compile_error(line_number,
                               PRIVATE_MEMBER_ACCESS_ERR,
                               STRING_MESSAGE_ARGUMENT, "member_name",
@@ -3031,6 +3031,8 @@ add_instantiating_struct_constructor(ClassDefinition *cd) {
     // create method member
     ClassOrMemberModifierList modifier =
         dkc_create_class_or_member_modifier(VIRTUAL_MODIFIER);
+    modifier = dkc_chain_class_or_member_modifier(
+        modifier, dkc_create_class_or_member_modifier(PUBLIC_MODIFIER));
 
     FunctionDefinition *fd = dkc_create_function_definition(
         type, "instantiating_struct_constructor",

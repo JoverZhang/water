@@ -10,7 +10,7 @@ fn fopen(file_name: str, mode: str) -> File {
   if (fp == null) {
     return null;
   } else {
-    return new File(fp);
+    return File{ fp: fp };
   }
 }
 

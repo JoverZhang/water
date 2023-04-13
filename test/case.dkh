@@ -66,9 +66,10 @@ test_class_multi_constructor();
 struct FieldInitClass {
   pub x: i32;
   pub y: i32 = 10;
+  pub fn create() -> FieldInitClass { return FieldInitClass{ x: 0, y: 10 }; }
 }
 fn test_class_field_init() -> void {
-  let o = new FieldInitClass();
+  let o = FieldInitClass::create();
   test_assert(0 == o.x);
   test_assert(10 == o.y);
   println("success: test_class_field_init()");
@@ -78,14 +79,14 @@ test_class_field_init();
 ///////////////////////////////////////
 //// interface
 interface ToString {
-  fn to_str(this) -> str;
+  pub fn to_str(this) -> str;
 }
 struct ToStringClass : ToString {
   override
   pub fn to_str(this) -> str { return "ToStringClass()"; }
 }
 fn test_interface() -> void {
-  let o: ToString = new ToStringClass();
+  let o: ToString = ToStringClass{};
   test_assert("ToStringClass()" == o.to_str());
 
   println("success: test_interface()");
@@ -178,7 +179,7 @@ test_cast();
 ///////////////////////////////////////////////////////////////////////////////
 // downcast
 fn test_downcast() -> void {
-  let o = new ToStringClass();
+  let o = ToStringClass{};
   let t: ToString = o;
   o = t.(ToStringClass);
   test_assert("ToStringClass()" == t.(ToStringClass).to_str());
@@ -190,7 +191,7 @@ test_downcast();
 ///////////////////////////////////////////////////////////////////////////////
 // instanceof
 fn test_instanceof() -> void {
-  let o: ToString = new ToStringClass();
+  let o: ToString = ToStringClass{};
   test_assert(o instanceof ToStringClass);
   // test_assert(o instanceof ToString); // always is true
 
@@ -213,8 +214,7 @@ fn test_delegate() -> void {
   let f: DelegateF2I = f2i;
   test_assert(42 == f(42.2));
 
-  let o = new DelegateClass();
-  o.f = f2i;
+  let o = DelegateClass{ f: f2i };
   let g = o.f;
   test_assert(42 == g(42.2));
 

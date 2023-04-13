@@ -4,7 +4,7 @@ fn println(s: str) -> void {
 }
 
 pub struct File {
-  fp: native_pointer;
+  pub fp: native_pointer;
   constructor initialize(fp: native_pointer) {
     this.fp = fp;
   }
@@ -31,9 +31,9 @@ fn randomize() -> void;
 fn random(range: i32) -> i32;
 
 struct StackTrace {
-  line_number: i32;
-  file_name: str;
-  function_name: str;
+  pub line_number: i32;
+  pub file_name: str;
+  pub function_name: str;
 }
 
 abstract pub struct Exception {
