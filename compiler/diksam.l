@@ -131,7 +131,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"f64"          return DOUBLE_T;
 <INITIAL>"str"          return STRING_T;
 <INITIAL>"native_pointer"       return NATIVE_POINTER_T;
-<INITIAL>"new"          return NEW;
+<INITIAL>"New"          return NEW;
 <INITIAL>"require"      return REQUIRE;
 <INITIAL>"rename"       return RENAME;
 <INITIAL>"struct"       return CLASS_T;

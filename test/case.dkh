@@ -39,7 +39,7 @@ pub struct Point {
   pub fn to_str(this) -> str { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
 }
 fn test_class_method() -> void {
-  let point = new Point(10, 20);
+  let point = New Point(10, 20);
   test_assert("Point(x = 10, y = 20)" == point.to_str());
 
   println("success: test_class_method()");
@@ -54,8 +54,8 @@ struct MultiConstructorClass {
   pub constructor initialize2() { this.n = 2; }
 }
 fn test_class_multi_constructor() -> void {
-  test_assert(1 == new MultiConstructorClass().n);
-  test_assert(2 == new MultiConstructorClass.initialize2().n);
+  test_assert(1 == New MultiConstructorClass().n);
+  test_assert(2 == New MultiConstructorClass.initialize2().n);
 
   println("success: test_class_multi_constructor()");
 }
@@ -66,10 +66,10 @@ test_class_multi_constructor();
 struct FieldInitClass {
   pub x: i32;
   pub y: i32 = 10;
-  pub fn create() -> FieldInitClass { return FieldInitClass{ x: 0, y: 10 }; }
+  pub fn new() -> FieldInitClass { return FieldInitClass{ x: 0, y: 10 }; }
 }
 fn test_class_field_init() -> void {
-  let o = FieldInitClass::create();
+  let o = FieldInitClass::new();
   test_assert(0 == o.x);
   test_assert(10 == o.y);
   println("success: test_class_field_init()");
@@ -112,7 +112,7 @@ struct Child : Parent {
 }
 
 fn test_class_subclass() -> void {
-  let child = new Child(10, 20);
+  let child = New Child(10, 20);
   test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_str());
 
   println("success: test_class_subclass()");
@@ -153,9 +153,9 @@ fn test_array() -> void {
   test_assert("World" == s.substr(6, 5));
   test_assert(5 == s.substr(6, 5).length());
 
-  let p1 = new Point(10, 10);
-  let p3 = new Point(30, 30);
-  let point_arr = { p1, new Point(20, 20), p3 };
+  let p1 = New Point(10, 10);
+  let p3 = New Point(30, 30);
+  let point_arr = { p1, New Point(20, 20), p3 };
   test_assert(3 == point_arr.size());
   test_assert(p1 == point_arr[0]);
   test_assert(p3 == point_arr[2]);
@@ -167,7 +167,7 @@ test_array();
 ///////////////////////////////////////////////////////////////////////////////
 // cast
 fn test_cast() -> void {
-  let child = new Child(10, 20);
+  let child = New Child(10, 20);
   let parent1: Parent = child;
   let parent2: Parent = child;
   test_assert(parent1 == parent2);
@@ -195,7 +195,7 @@ fn test_instanceof() -> void {
   test_assert(o instanceof ToStringClass);
   // test_assert(o instanceof ToString); // always is true
 
-  let child: Parent = new Child(10, 20);
+  let child: Parent = New Child(10, 20);
   test_assert(child instanceof Child);
   // test_assert(child instanceof Parent); // always is true
 
@@ -305,7 +305,7 @@ test_switch();
 ///////////////////////////////////////
 //// throw exception
 struct TestException : Exception {}
-fn test_exception_f() -> void throws Exception { throw new TestException(); }
+fn test_exception_f() -> void throws Exception { throw New TestException(); }
 fn test_exception() -> void {
   let n = 2;
   try {
@@ -328,7 +328,7 @@ test_exception();
 ///////////////////////////////////////
 //// throw runtime exception
 struct TestRuntimeException : RuntimeException {}
-fn test_runtime_exception_f() -> void { throw new TestRuntimeException(); }
+fn test_runtime_exception_f() -> void { throw New TestRuntimeException(); }
 fn test_runtime_exception() -> void {
   let n = 2;
   try {
@@ -380,7 +380,7 @@ test_global_variable();
 // native pointer (File)
 fn test_native_pointer() -> void {
   let fd = fopen("test/hello.txt", "r");
-  let contents = new str[0];
+  let contents = New str[0];
   let s: str;
   while ((s = fgets(fd)) != null) {
     contents.add(s);

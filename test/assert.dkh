@@ -6,7 +6,7 @@ struct Panic : RuntimeException {
 }
 
 fn panic(message: str) -> void {
-  throw new Panic("panic");
+  throw New Panic("panic");
 }
 
 fn assert(expression: boolean, message: str) -> void {

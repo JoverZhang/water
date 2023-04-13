@@ -51,7 +51,7 @@ abstract pub struct Exception {
     }
   }
   pub virtual constructor initialize() {
-    this.stack_trace = new StackTrace[0];
+    this.stack_trace = New StackTrace[0];
   }
 }
 
