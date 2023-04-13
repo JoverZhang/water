@@ -163,9 +163,9 @@ dvm_conv_pc_to_line_number(DVM_Executable *exe, Function *func, int pc)
 
     if (func) {
         line_number
-            = exe->function[func->u.diksam_f.index].code_block.line_number;
+            = exe->function[func->u.water_f.index].code_block.line_number;
         line_number_size
-            = exe->function[func->u.diksam_f.index]
+            = exe->function[func->u.water_f.index]
             .code_block.line_number_size;
     } else {
         line_number = exe->top_level.line_number;

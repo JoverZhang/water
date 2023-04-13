@@ -2,7 +2,7 @@
 #include <string.h>
 #include "MEM.h"
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 
 static DKC_Compiler *st_current_compiler;
 

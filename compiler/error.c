@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "MEM.h"
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 
 extern char *yytext;
 extern ErrorDefinition dkc_error_message_format[];

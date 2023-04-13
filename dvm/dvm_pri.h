@@ -61,7 +61,7 @@ typedef struct {
 
 typedef enum {
     NATIVE_FUNCTION,
-    DIKSAM_FUNCTION
+    WATER_FUNCTION
 } FunctionKind;
 
 typedef struct {
@@ -76,7 +76,7 @@ typedef struct ExecutableEntry_tag ExecutableEntry;
 typedef struct {
     ExecutableEntry     *executable;
     int                 index;
-} DiksamFunction;
+} WaterFunction;
 
 typedef struct {
     char                *package_name;
@@ -85,7 +85,7 @@ typedef struct {
     DVM_Boolean         is_implemented;
     union {
         NativeFunction native_f;
-        DiksamFunction diksam_f;
+        WaterFunction  water_f;
     } u;
 } Function;
 

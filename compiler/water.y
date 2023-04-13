@@ -1,6 +1,6 @@
 %{
 #include <stdio.h>
-#include "diksamc.h"
+#include "water.h"
 #define YYDEBUG 1
 %}
 %union {

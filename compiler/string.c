@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "MEM.h"
-#include "diksamc.h"
+#include "water.h"
 
 #define STRING_ALLOC_SIZE       (256)
 

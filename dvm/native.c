@@ -89,7 +89,7 @@ nv_fopen_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (is_object_null(args[0].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FOPEN_1ST_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -97,7 +97,7 @@ nv_fopen_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     }
     if (is_object_null(args[1].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FOPEN_2ND_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -130,7 +130,7 @@ nv_fgets_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (is_object_null(args[0].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FOPEN_1ST_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -139,7 +139,7 @@ nv_fgets_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     if (!DVM_check_native_pointer_type(args[0].object.data,
                                        &st_file_type_info)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FGETS_FP_BAD_TYPE_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -148,7 +148,7 @@ nv_fgets_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     fp = DVM_object_get_native_pointer(args[0].object.data);
     if (fp == NULL) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FGETS_FP_INVALID_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -173,7 +173,7 @@ nv_fgets_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
         if (wc_str == NULL) {
             MEM_free(mb_buf);
             DVM_set_exception(dvm, context, &st_lib_info,
-                              DVM_DIKSAM_DEFAULT_PACKAGE,
+                              DVM_WATER_DEFAULT_PACKAGE,
                               MULTIBYTE_CONVERTION_EXCEPTION_NAME,
                               (int)FGETS_BAD_MULTIBYTE_CHARACTER_ERR,
                               DVM_MESSAGE_ARGUMENT_END);
@@ -206,7 +206,7 @@ nv_fputs_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     }
     if (is_object_null(args[1].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FPUTS_2ND_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -215,7 +215,7 @@ nv_fputs_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     if (!DVM_check_native_pointer_type(args[1].object.data,
                                        &st_file_type_info)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FPUTS_FP_BAD_TYPE_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -224,7 +224,7 @@ nv_fputs_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     fp = DVM_object_get_native_pointer(args[1].object.data);
     if (fp == NULL) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FPUTS_FP_INVALID_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -248,7 +248,7 @@ nv_fclose_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (is_object_null(args[0].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FCLOSE_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -257,7 +257,7 @@ nv_fclose_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     if (!DVM_check_native_pointer_type(args[0].object.data,
                                        &st_file_type_info)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FCLOSE_FP_BAD_TYPE_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -266,7 +266,7 @@ nv_fclose_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     fp = DVM_object_get_native_pointer(args[0].object.data);
     if (fp == NULL) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           FCLOSE_FP_INVALID_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -324,7 +324,7 @@ nv_parse_int_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (is_object_null(args[0].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           PARSE_INT_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -334,7 +334,7 @@ nv_parse_int_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (sscanf(mb_str, "%d", &ret.int_value) != 1) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           NUMBER_FORMAT_EXCEPTION_NAME,
                           PARSE_INT_FORMAT_ERR,
                           DVM_STRING_MESSAGE_ARGUMENT, "str", mb_str,
@@ -353,7 +353,7 @@ nv_parse_double_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (is_object_null(args[0].object)) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           DVM_NULL_POINTER_EXCEPTION_NAME,
                           PARSE_DOUBLE_ARG_NULL_ERR,
                           DVM_MESSAGE_ARGUMENT_END);
@@ -363,7 +363,7 @@ nv_parse_double_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (sscanf(mb_str, "%lf", &ret.double_value) != 1) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           NUMBER_FORMAT_EXCEPTION_NAME,
                           PARSE_DOUBLE_FORMAT_ERR,
                           DVM_STRING_MESSAGE_ARGUMENT, "str", mb_str,
@@ -639,7 +639,7 @@ nv_array_insert_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 
     if (pos < 0 || pos > array_size) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           ARRAY_INDEX_EXCEPTION_NAME,
                           INSERT_INDEX_OUT_OF_BOUNDS_ERR,
                           DVM_INT_MESSAGE_ARGUMENT, "pos", pos,
@@ -670,7 +670,7 @@ nv_array_remove_proc(DVM_VirtualMachine *dvm,  DVM_Context *context,
     array_size = DVM_array_size(dvm, array);
     if (pos < 0 || pos >= array_size) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           ARRAY_INDEX_EXCEPTION_NAME,
                           REMOVE_INDEX_OUT_OF_BOUNDS_ERR,
                           DVM_INT_MESSAGE_ARGUMENT, "pos", pos,
@@ -743,7 +743,7 @@ nv_string_substr_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     
     if (pos < 0 || pos >= org_len) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           STRING_INDEX_EXCEPTION_NAME,
                           STRING_POS_OUT_OF_BOUNDS_ERR,
                           DVM_INT_MESSAGE_ARGUMENT, "len", org_len,
@@ -753,7 +753,7 @@ nv_string_substr_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     }
     if (len < 0 || pos + len > org_len) {
         DVM_set_exception(dvm, context, &st_lib_info,
-                          DVM_DIKSAM_DEFAULT_PACKAGE,
+                          DVM_WATER_DEFAULT_PACKAGE,
                           STRING_INDEX_EXCEPTION_NAME,
                           STRING_SUBSTR_LEN_ERR,
                           DVM_INT_MESSAGE_ARGUMENT, "len", len,

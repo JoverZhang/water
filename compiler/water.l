@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 #include "y.tab.h"
 
 static int

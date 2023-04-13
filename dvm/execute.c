@@ -209,11 +209,11 @@ dvm_expand_stack(DVM_VirtualMachine *dvm, int need_stack_size)
 }
 
 static void
-invoke_diksam_function(DVM_VirtualMachine *dvm,
-                       Function **caller_p, Function *callee,
-                       DVM_Byte **code_p, int *code_size_p, int *pc_p,
-                       int *sp_p, int *base_p,
-                       ExecutableEntry **ee_p, DVM_Executable **exe_p)
+invoke_water_function(DVM_VirtualMachine *dvm,
+                      Function **caller_p, Function *callee,
+                      DVM_Byte **code_p, int *code_size_p, int *pc_p,
+                      int *sp_p, int *base_p,
+                      ExecutableEntry **ee_p, DVM_Executable **exe_p)
 {
     CallInfo *call_info;
     DVM_Function *callee_p;
@@ -222,14 +222,14 @@ invoke_diksam_function(DVM_VirtualMachine *dvm,
     if (!callee->is_implemented) {
         dvm_dynamic_load(dvm, *exe_p, *caller_p, *pc_p, callee);
     }
-    *ee_p = callee->u.diksam_f.executable;
+    *ee_p = callee->u.water_f.executable;
     *exe_p = (*ee_p)->executable;
-    callee_p = &(*exe_p)->function[callee->u.diksam_f.index];
+    callee_p = &(*exe_p)->function[callee->u.water_f.index];
 
     dvm_expand_stack(dvm,
                      CALL_INFO_ALIGN_SIZE
                      + callee_p->local_variable_count
-                     + (*exe_p)->function[callee->u.diksam_f.index]
+                     + (*exe_p)->function[callee->u.water_f.index]
                      .code_block.need_stack_size);
 
     call_info = (CallInfo*)&dvm->stack.stack[*sp_p-1];
@@ -252,9 +252,9 @@ invoke_diksam_function(DVM_VirtualMachine *dvm,
     *sp_p += CALL_INFO_ALIGN_SIZE + callee_p->local_variable_count - 1;
     *pc_p = 0;
 
-    *code_p = (*exe_p)->function[callee->u.diksam_f.index].code_block.code;
+    *code_p = (*exe_p)->function[callee->u.water_f.index].code_block.code;
     *code_size_p
-        = (*exe_p)->function[callee->u.diksam_f.index].code_block.code_size;
+        = (*exe_p)->function[callee->u.water_f.index].code_block.code_size;
 }
 
 /* This function returns DVM_TRUE if this function was called from native.
@@ -269,7 +269,7 @@ do_return(DVM_VirtualMachine *dvm, Function **func_p,
     DVM_Function *callee_p;
     int arg_count;
 
-    callee_p = &(*exe_p)->function[(*func_p)->u.diksam_f.index];
+    callee_p = &(*exe_p)->function[(*func_p)->u.water_f.index];
 
     arg_count = callee_p->parameter_count;
     if (callee_p->is_method) {
@@ -278,11 +278,11 @@ do_return(DVM_VirtualMachine *dvm, Function **func_p,
     call_info = (CallInfo*)&dvm->stack.stack[*base_p + arg_count];
 
     if (call_info->caller) {
-        *ee_p = call_info->caller->u.diksam_f.executable;
+        *ee_p = call_info->caller->u.water_f.executable;
         *exe_p = (*ee_p)->executable;
-        if (call_info->caller->kind == DIKSAM_FUNCTION) {
+        if (call_info->caller->kind == WATER_FUNCTION) {
             caller_p
-                = &(*exe_p)->function[call_info->caller->u.diksam_f.index];
+                = &(*exe_p)->function[call_info->caller->u.water_f.index];
             *code_p = caller_p->code_block.code;
             *code_size_p = caller_p->code_block.code_size;
         }
@@ -314,7 +314,7 @@ return_function(DVM_VirtualMachine *dvm, Function **func_p,
 
     return_value = dvm->stack.stack[dvm->stack.stack_pointer-1];
     dvm->stack.stack_pointer--;
-    callee_func = &(*exe_p)->function[(*func_p)->u.diksam_f.index];
+    callee_func = &(*exe_p)->function[(*func_p)->u.water_f.index];
 
     ret = do_return(dvm, func_p, code_p, code_size_p, pc_p, base_p,
                     ee_p, exe_p);
@@ -561,10 +561,10 @@ throw_in_try(DVM_VirtualMachine *dvm,
     DVM_Function *dvm_func = NULL;
 
     if (func) {
-        cb = &(func->u.diksam_f.executable->executable->function
-               [func->u.diksam_f.index]).code_block;
-        dvm_func = &(func->u.diksam_f.executable->executable->function
-                     [func->u.diksam_f.index]);
+        cb = &(func->u.water_f.executable->executable->function
+               [func->u.water_f.index]).code_block;
+        dvm_func = &(func->u.water_f.executable->executable->function
+                     [func->u.water_f.index]);
     } else {
         cb = &exe->top_level;
     }
@@ -636,8 +636,8 @@ add_stack_trace(DVM_VirtualMachine *dvm, DVM_Executable *exe,
 
     line_number = dvm_conv_pc_to_line_number(exe, func, pc);
     class_index = DVM_search_class(dvm,
-                                   DVM_DIKSAM_DEFAULT_PACKAGE,
-                                   DIKSAM_STACK_TRACE_CLASS);
+                                   DVM_WATER_DEFAULT_PACKAGE,
+                                   WATER_STACK_TRACE_CLASS);
     stack_trace = dvm_create_class_object_i(dvm, class_index);
     STO_WRITE(dvm, 0, stack_trace);
     dvm->stack.stack_pointer++;
@@ -656,7 +656,7 @@ add_stack_trace(DVM_VirtualMachine *dvm, DVM_Executable *exe,
     func_name_index
         = DVM_get_field_index(dvm, stack_trace, "function_name");
     if (func) {
-        func_name = exe->function[func->u.diksam_f.index].name;
+        func_name = exe->function[func->u.water_f.index].name;
     } else {
         func_name = "top level";
     }
@@ -680,9 +680,9 @@ DVM_Value dvm_execute_i(DVM_VirtualMachine *dvm, Function *func,
                         DVM_Byte *code, int code_size, int base);
 
 static DVM_Value
-invoke_diksam_function_from_native(DVM_VirtualMachine *dvm,
-                                   Function *callee, DVM_ObjectRef obj,
-                                   DVM_Value *args)
+invoke_water_function_from_native(DVM_VirtualMachine *dvm,
+                                  Function *callee, DVM_ObjectRef obj,
+                                  DVM_Value *args)
 {
     int base;
     int i;
@@ -700,8 +700,8 @@ invoke_diksam_function_from_native(DVM_VirtualMachine *dvm,
     current_function_backup = dvm->current_function;
     current_pc_backup = dvm->pc;
 
-    dvm_exe = callee->u.diksam_f.executable->executable;
-    dvm_func = &dvm_exe->function[callee->u.diksam_f.index];
+    dvm_exe = callee->u.water_f.executable->executable;
+    dvm_func = &dvm_exe->function[callee->u.water_f.index];
 
     base = dvm->stack.stack_pointer;
     for (i = 0; i < dvm_func->parameter_count; i++) {
@@ -721,13 +721,13 @@ invoke_diksam_function_from_native(DVM_VirtualMachine *dvm,
     for (i = 0; i < CALL_INFO_ALIGN_SIZE; i++) {
         dvm->stack.pointer_flags[dvm->stack.stack_pointer + i] = DVM_FALSE;
         dvm->pc = 0;
-        dvm->current_executable = callee->u.diksam_f.executable;
+        dvm->current_executable = callee->u.water_f.executable;
     }
     dvm->stack.stack_pointer += CALL_INFO_ALIGN_SIZE;
     initialize_local_variables(dvm, dvm_func, dvm->stack.stack_pointer);
     dvm->stack.stack_pointer += dvm_func->local_variable_count;
-    code = dvm_exe->function[callee->u.diksam_f.index].code_block.code;
-    code_size = dvm_exe->function[callee->u.diksam_f.index]
+    code = dvm_exe->function[callee->u.water_f.index].code_block.code;
+    code_size = dvm_exe->function[callee->u.water_f.index]
         .code_block.code_size;
 
     ret = dvm_execute_i(dvm, callee, code, code_size, base);
@@ -767,12 +767,12 @@ do_throw(DVM_VirtualMachine *dvm,
         } else {
             int func_index
                 = dvm_search_function(dvm,
-                                      DVM_DIKSAM_DEFAULT_PACKAGE,
-                                      DIKSAM_PRINT_STACK_TRACE_FUNC);
+                                      DVM_WATER_DEFAULT_PACKAGE,
+                                      WATER_PRINT_STACK_TRACE_FUNC);
             add_stack_trace(dvm, *exe_p, *func_p, *pc_p);
 
-            invoke_diksam_function_from_native(dvm, dvm->function[func_index],
-                                               dvm->current_exception, NULL);
+          invoke_water_function_from_native(dvm, dvm->function[func_index],
+                                            dvm->current_exception, NULL);
             exit(1);
         }
     }
@@ -791,7 +791,7 @@ dvm_create_exception(DVM_VirtualMachine *dvm, char *class_name,
     int stack_trace_index;
 
     va_start(ap, id);
-    class_index = DVM_search_class(dvm, DVM_DIKSAM_DEFAULT_PACKAGE,
+    class_index = DVM_search_class(dvm, DVM_WATER_DEFAULT_PACKAGE,
                                    class_name);
     obj = dvm_create_class_object_i(dvm, class_index);
 
@@ -1808,10 +1808,10 @@ dvm_execute_i(DVM_VirtualMachine *dvm, Function *func,
                     pc++;
                 }
             } else {
-                invoke_diksam_function(dvm, &func, dvm->function[func_idx],
-                                       &code, &code_size, &pc,
-                                       &dvm->stack.stack_pointer, &base,
-                                       &ee, &exe);
+              invoke_water_function(dvm, &func, dvm->function[func_idx],
+                                    &code, &code_size, &pc,
+                                    &dvm->stack.stack_pointer, &base,
+                                    &ee, &exe);
             }
             break;
         }
@@ -2009,10 +2009,10 @@ DVM_invoke_delegate(DVM_VirtualMachine *dvm, DVM_Value delegate,
     }
     callee = dvm->function[func_idx];
 
-    if (callee->kind == DIKSAM_FUNCTION) {
-        invoke_diksam_function_from_native(dvm, callee,
-                                           del_obj.data->u.delegate.object,
-                                           args);
+    if (callee->kind == WATER_FUNCTION) {
+      invoke_water_function_from_native(dvm, callee,
+                                        del_obj.data->u.delegate.object,
+                                        args);
     } else {
         DBG_assert((callee->kind == NATIVE_FUNCTION),
                    ("kind..%d", callee->kind));

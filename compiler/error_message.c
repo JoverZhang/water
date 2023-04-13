@@ -1,5 +1,5 @@
 #include <string.h>
-#include "diksamc.h"
+#include "water.h"
 
 ErrorDefinition dkc_error_message_format[] = {
     {"dummy"},
@@ -70,13 +70,13 @@ ErrorDefinition dkc_error_message_format[] = {
     {"The target of 'instanceof' must be a class."},
     {"This 'instanceof' always evaluates to true."},
     {"This 'instanceof' always evaluates to false."},
-    {"There is no parent-child relationship in Diksam interfaces, so this 'instanceof' always evaluates to false."},
+    {"There is no parent-child relationship in Water interfaces, so this 'instanceof' always evaluates to false."},
     {"Only classes can be the target of a downcast."},
     {"Only classes can be the destination of a downcast."},
     {"This downcast is unnecessary."},
     {"Trying to downcast to a superclass."},
     {"Trying to downcast to a class that is not in the inheritance hierarchy."},
-    {"There is no parent-child relationship in Diksam interfaces, so downcasting is not possible."},
+    {"There is no parent-child relationship in Water interfaces, so downcasting is not possible."},
     {"Catching a non-class type."},
     {"The class $(class_name) being caught is not a subclass of Exception."},
     {"Throwing a non-class type."},
@@ -103,7 +103,7 @@ ErrorDefinition dkc_error_message_format[] = {
     {"Constructors cannot be called directly."},
     {"Type name $(name) not found."},
     {"Enumeration type $(type_name) does not have enumerator $(enumerator_name)."},
-    {"Interfaces cannot be inherited in Diksam (for now)."},
+    {"Interfaces cannot be inherited in Water (for now)."},
     {"Member $(member_name) cannot be accessed outside of the package."},
     {"Class $(class_name) cannot be accessed outside of the package."},
     {"'this' cannot be used outside of a class."},

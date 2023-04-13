@@ -6,12 +6,12 @@
 #include "dvm_pri.h"
 
 static void
-implement_diksam_function(DVM_VirtualMachine *dvm, int dest_idx,
-                          ExecutableEntry *ee, int src_idx)
+implement_water_function(DVM_VirtualMachine *dvm, int dest_idx,
+                         ExecutableEntry *ee, int src_idx)
 {
-    dvm->function[dest_idx]->u.diksam_f.executable
+    dvm->function[dest_idx]->u.water_f.executable
         = ee;
-    dvm->function[dest_idx]->u.diksam_f.index = src_idx;
+    dvm->function[dest_idx]->u.water_f.index = src_idx;
 }
 
 static void
@@ -52,7 +52,7 @@ add_functions(DVM_VirtualMachine *dvm, ExecutableEntry *ee)
                 }
                 new_func_flags[src_idx] = DVM_FALSE;
                 if (ee->executable->function[src_idx].is_implemented) {
-                    implement_diksam_function(dvm, dest_idx, ee, src_idx);
+                  implement_water_function(dvm, dest_idx, ee, src_idx);
                 }
                 break;
             }
@@ -81,11 +81,11 @@ add_functions(DVM_VirtualMachine *dvm, ExecutableEntry *ee)
         }
         dvm->function[dest_idx]->name
             = MEM_strdup(ee->executable->function[src_idx].name);
-        dvm->function[dest_idx]->kind = DIKSAM_FUNCTION;
+        dvm->function[dest_idx]->kind = WATER_FUNCTION;
         dvm->function[dest_idx]->is_implemented
             = ee->executable->function[src_idx].is_implemented;
         if (ee->executable->function[src_idx].is_implemented) {
-            implement_diksam_function(dvm, dest_idx, ee, src_idx);
+          implement_water_function(dvm, dest_idx, ee, src_idx);
         }
         dest_idx++;
     }

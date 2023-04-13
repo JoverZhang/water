@@ -24,10 +24,10 @@ typedef enum {
 #define FILE_PATH_SEPARATOR     (':')
 #endif
 
-#define DIKSAM_REQUIRE_SUFFIX   (".water")
-#define DIKSAM_IMPLEMENTATION_SUFFIX    (".waterm")
-#define DIKSAM_STACK_TRACE_CLASS ("StackTrace")
-#define DIKSAM_PRINT_STACK_TRACE_FUNC ("Exception#print_stack_trace")
+#define WATER_REQUIRE_SUFFIX   (".water")
+#define WATER_IMPLEMENTATION_SUFFIX    (".waterm")
+#define WATER_STACK_TRACE_CLASS ("StackTrace")
+#define WATER_PRINT_STACK_TRACE_FUNC ("Exception#print_stack_trace")
 #define EXCEPTION_CLASS_NAME ("Exception")
 #define BUG_EXCEPTION_CLASS_NAME ("BugException")
 #define RUNTIME_EXCEPTION_CLASS_NAME ("RuntimeException")

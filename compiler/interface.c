@@ -1,7 +1,7 @@
 #include <string.h>
 #include "MEM.h"
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 
 static CompilerList *st_compiler_list = NULL;
 extern BuiltinScript dkc_builtin_script[];
@@ -218,7 +218,7 @@ make_search_path(int line_number, PackageName *package_name, char *buf)
     int prev_len = 0;
     int suffix_len;
 
-    suffix_len = strlen(DIKSAM_REQUIRE_SUFFIX);
+    suffix_len = strlen(WATER_REQUIRE_SUFFIX);
     buf[0] = '\0';
     for (pos = package_name; pos; pos = pos->next) {
         prev_len = len;
@@ -234,7 +234,7 @@ make_search_path(int line_number, PackageName *package_name, char *buf)
             len++;
         }
     }
-    strcpy(&buf[len], DIKSAM_REQUIRE_SUFFIX);
+    strcpy(&buf[len], WATER_REQUIRE_SUFFIX);
 }
 
 static void
@@ -244,7 +244,7 @@ make_search_path_impl(char *package_name, char *buf)
     int package_len;
     int i;
 
-    suffix_len = strlen(DIKSAM_IMPLEMENTATION_SUFFIX);
+    suffix_len = strlen(WATER_IMPLEMENTATION_SUFFIX);
     package_len = strlen(package_name);
 
     DBG_assert(package_len <= FILENAME_MAX - (2 + suffix_len),
@@ -258,7 +258,7 @@ make_search_path_impl(char *package_name, char *buf)
         }
     }
     buf[i] = '\0';
-    strcat(buf, DIKSAM_IMPLEMENTATION_SUFFIX);
+    strcat(buf, WATER_IMPLEMENTATION_SUFFIX);
 }
 
 static void

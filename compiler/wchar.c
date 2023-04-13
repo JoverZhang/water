@@ -2,7 +2,7 @@
 #include <string.h>
 #include <wchar.h>
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 
 wchar_t *
 dkc_mbstowcs_alloc(int line_number, const char *src)

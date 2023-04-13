@@ -1,7 +1,7 @@
 #include <string.h>
 #include "MEM.h"
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 #include "DVM_dev.h"
 
 DeclarationList *
@@ -164,7 +164,7 @@ add_default_package(RequireList *require_list)
     for (req_pos = require_list; req_pos; req_pos = req_pos->next) {
         char *temp_name
             = dkc_package_name_to_string(req_pos->package_name);
-        if (!strcmp(temp_name, DVM_DIKSAM_DEFAULT_PACKAGE)) {
+        if (!strcmp(temp_name, DVM_WATER_DEFAULT_PACKAGE)) {
             default_package_required = DVM_TRUE;
         }
         MEM_free(temp_name);
@@ -174,8 +174,8 @@ add_default_package(RequireList *require_list)
         PackageName *pn;
         RequireList *req_temp;
 
-        pn = dkc_create_package_name(DVM_DIKSAM_DEFAULT_PACKAGE_P1);
-        pn = dkc_chain_package_name(pn, DVM_DIKSAM_DEFAULT_PACKAGE_P2);
+        pn = dkc_create_package_name(DVM_WATER_DEFAULT_PACKAGE_P1);
+        pn = dkc_chain_package_name(pn, DVM_WATER_DEFAULT_PACKAGE_P2);
         req_temp = require_list;
         require_list = dkc_create_require_list(pn);
         require_list->next = req_temp;
@@ -196,7 +196,7 @@ dkc_set_require_and_rename_list(RequireList *require_list,
         = dkc_package_name_to_string(compiler->package_name);
 
     if (!dvm_compare_string(current_package_name,
-                            DVM_DIKSAM_DEFAULT_PACKAGE)) {
+                            DVM_WATER_DEFAULT_PACKAGE)) {
         require_list = add_default_package(require_list);
     }
     MEM_free(current_package_name);

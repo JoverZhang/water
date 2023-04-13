@@ -43,10 +43,10 @@ typedef struct {
     DVM_ErrorDefinition *message_format;
 } DVM_NativeLibInfo;
 
-#define DVM_DIKSAM_DEFAULT_PACKAGE_P1  "water"
-#define DVM_DIKSAM_DEFAULT_PACKAGE_P2  "lang"
-#define DVM_DIKSAM_DEFAULT_PACKAGE \
- (DVM_DIKSAM_DEFAULT_PACKAGE_P1 "." DVM_DIKSAM_DEFAULT_PACKAGE_P2)
+#define DVM_WATER_DEFAULT_PACKAGE_P1  "water"
+#define DVM_WATER_DEFAULT_PACKAGE_P2  "lang"
+#define DVM_WATER_DEFAULT_PACKAGE \
+ (DVM_WATER_DEFAULT_PACKAGE_P1 "." DVM_WATER_DEFAULT_PACKAGE_P2)
 #define DVM_NULL_POINTER_EXCEPTION_NAME ("NullPointerException")
 
 /* load.c */

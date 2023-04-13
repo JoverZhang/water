@@ -3,7 +3,7 @@
 #include <stdarg.h>
 #include "MEM.h"
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 
 extern OpcodeInfo dvm_opcode_info[];
 

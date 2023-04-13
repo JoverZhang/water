@@ -19,7 +19,7 @@ set(CMAKE_C_FLAGS "-Wall -ansi -Wswitch-enum -DDEBUG")
 add_library(main OBJECT main/main.c)
 
 set(CMAKE_C_FLAGS "-lm")
-add_executable(diksam
+add_executable(water
         $<TARGET_OBJECTS:main>
         $<TARGET_OBJECTS:compiler>
         $<TARGET_OBJECTS:builtin>

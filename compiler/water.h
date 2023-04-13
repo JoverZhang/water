@@ -1,5 +1,5 @@
-#ifndef PRIVATE_DIKSAMC_H_INCLUDED
-#define PRIVATE_DIKSAMC_H_INCLUDED
+#ifndef PRIVATE_WATER_H_INCLUDED
+#define PRIVATE_WATER_H_INCLUDED
 #include <stdio.h>
 #include <setjmp.h>
 #include <wchar.h>
@@ -883,7 +883,7 @@ typedef struct {
     char **source_string;
 } BuiltinScript;
 
-/* diksam.l */
+/* water.l */
 void dkc_set_source_string(char **source);
 
 /* create.c */
@@ -1132,4 +1132,4 @@ void dkc_compile_error(int line_number, CompileError id, ...);
 /* disassemble.c */
 void dkc_disassemble(DVM_Executable *exe);
 
-#endif /* PRIVATE_DIKSAMC_H_INCLUDED */
+#endif /* PRIVATE_WATER_H_INCLUDED */

@@ -2,7 +2,7 @@
 #include <string.h>
 #include "MEM.h"
 #include "DBG.h"
-#include "diksamc.h"
+#include "water.h"
 
 static int
 reserve_function_index(DKC_Compiler *compiler, FunctionDefinition *src)
