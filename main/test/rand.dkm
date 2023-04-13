@@ -1,5 +1,0 @@
-int i;
-
-for (i = 0; i < 100; i++) {
-    println("random(" + i + ").." + random(i));
-}
