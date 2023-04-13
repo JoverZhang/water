@@ -705,6 +705,11 @@ for_statement
         {
             $$ = dkc_create_for_statement($1, $4, $6, $8, $10);
         }
+        | label_opt FOR LP declaration_statement expression_opt SEMICOLON
+          expression_opt RP block
+        {
+            $$ = dkc_create_for_init_declaration_statement($1, $4, $5, $7, $9);
+        }
         ;
 do_while_statement
         : label_opt DO_T block WHILE LP expression RP SEMICOLON

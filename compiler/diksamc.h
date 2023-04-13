@@ -989,6 +989,10 @@ dkc_create_foreach_statement(char *label, char *variable,
 Statement *dkc_create_for_statement(char *label,
                                     Expression *init, Expression *cond,
                                     Expression *post, Block *block);
+Statement *
+dkc_create_for_init_declaration_statement(char *label, Statement *init,
+                                          Expression *cond, Expression *post,
+                                          Block *block);
 Statement *dkc_create_do_while_statement(char *label, Block *block,
                                          Expression *condition);
 Block *dkc_alloc_block(void);

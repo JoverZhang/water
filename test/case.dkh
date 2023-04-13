@@ -245,9 +245,10 @@ test_enum();
 ///////////////////////////////////////////////////////////////////////////////
 // for loop
 fn test_for_loop() -> void {
+  for (let i = 0; i <= 100; i++) { i++; }
+
   let n = 0;
-  let i: i32;
-  for (i = 0; i <= 100; i++) { n += i; }
+  for (let i = 0; i <= 100; i++) { n += i; }
   test_assert(5050 == n);
 
   println("success: test_for_loop()");

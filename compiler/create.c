@@ -872,6 +872,33 @@ dkc_create_for_statement(char *label, Expression *init, Expression *cond,
 }
 
 Statement *
+dkc_create_for_init_declaration_statement(char *label, Statement *init,
+                                          Expression *cond, Expression *post,
+                                          Block *block)
+{
+    // TODO: use a better solution to implement for with declaration
+    // Mock below code (temporary):
+    //
+    // if (true) {
+    //   let i = 0;
+    //   for (; i < 100; i++) { }
+    // }
+
+    Expression *if_cond = dkc_create_boolean_expression(DVM_TRUE);
+    Block *if_block = dkc_open_block();
+    block->outer_block = if_block;
+
+    StatementList *statement_list = dkc_create_statement_list(init);
+    Statement *for_statement
+            = dkc_create_for_statement(label, NULL, cond, post, block);
+    statement_list = dkc_chain_statement_list(statement_list, for_statement);
+
+    if_block = dkc_close_block(if_block, statement_list);
+
+    return dkc_create_if_statement(if_cond, if_block, NULL, NULL);
+}
+
+Statement *
 dkc_create_do_while_statement(char *label, Block *block,
                               Expression *condition)
 {
