@@ -1073,6 +1073,7 @@ int dkc_close_character_literal(void);
 
 /* fix_tree.c */
 void dkc_fix_tree(DKC_Compiler *compiler);
+int dkc_fix_add_class(ClassDefinition *src);
 
 /* generate.c */
 DVM_TypeSpecifier *dkc_copy_type_specifier(TypeSpecifier *src);

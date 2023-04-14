@@ -189,6 +189,11 @@ add_class(ClassDefinition *src)
     return ret;
 }
 
+int
+dkc_fix_add_class(ClassDefinition *src) {
+  return add_class(src);
+}
+
 static DVM_Boolean
 check_type_compatibility(TypeSpecifier *super_t, TypeSpecifier *sub_t);
 
@@ -269,6 +274,9 @@ is_super_interface(ClassDefinition *child, ClassDefinition *parent,
             return DVM_FALSE;
         }
     }
+
+    // TODO: remove below commented code
+    // dkc_fix_add_class(parent);
 
     // append interface to interface_list of child
     ExtendsList *interface_list = dkc_create_extends_list(parent->name);

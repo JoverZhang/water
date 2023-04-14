@@ -341,16 +341,22 @@ set_path_to_compiler(DKC_Compiler *compiler, char *path)
     strcpy(compiler->path, path);
 }
 
-static DVM_Executable *
-do_compile(DKC_Compiler *compiler, DVM_ExecutableList *list,
-           char *path, DVM_Boolean is_required)
-{
+
+typedef struct DVM_ExecutableInfo {
+  DKC_Compiler *compiler;
+  char *path;
+  DVM_Boolean is_required;
+  struct DVM_ExecutableInfo *next;
+} DVM_ExecutableInfo;
+static DVM_ExecutableInfo info_list[100];
+static int info_list_len = 0;
+
+static void
+do_just_compile(DKC_Compiler *compiler, char *path, DVM_Boolean is_required) {
     extern FILE *yyin;
     extern int yyparse(void);
     RequireList *req_pos;
     DKC_Compiler *req_comp;
-    DVM_Executable *exe;
-    DVM_Executable *req_exe;
     char found_path[FILENAME_MAX];
     DKC_Compiler *compiler_backup;
     SourceInput source_input;
@@ -367,17 +373,17 @@ do_compile(DKC_Compiler *compiler, DVM_ExecutableList *list,
         req_comp = search_compiler(st_compiler_list, req_pos->package_name);
         if (req_comp) {
             compiler->required_list
-                = add_compiler_to_list(compiler->required_list, req_comp);
+                    = add_compiler_to_list(compiler->required_list, req_comp);
             continue;
         }
         req_comp = DKC_create_compiler();
-        
+
         /* BUGBUG req_comp references parent compiler's MEM_storage */
         req_comp->package_name = req_pos->package_name;
         req_comp->source_suffix = DKH_SOURCE;
 
         compiler->required_list
-            = add_compiler_to_list(compiler->required_list, req_comp);
+                = add_compiler_to_list(compiler->required_list, req_comp);
         st_compiler_list = add_compiler_to_list(st_compiler_list, req_comp);
 
         get_require_input(req_pos, found_path, &source_input);
@@ -388,25 +394,57 @@ do_compile(DKC_Compiler *compiler, DVM_ExecutableList *list,
         } else {
             dkc_set_source_string(source_input.u.string.lines);
         }
-        req_exe = do_compile(req_comp, list, found_path, DVM_TRUE);
+        do_just_compile(req_comp, found_path, DVM_TRUE);
     }
 
     dkc_fix_tree(compiler);
-    exe = dkc_generate(compiler);
-    if (path) {
-        exe->path = MEM_strdup(path);
-    } else {
-        exe->path = NULL;
-    }
-    /* dvm_disassemble(exe);*/
 
-    exe->is_required = is_required;
-    if (!add_exe_to_list(exe, list)) {
-        dvm_dispose_executable(exe);
+    // add to info_list
+    info_list[info_list_len].compiler = compiler;
+    if (path) {
+        info_list[info_list_len].path = MEM_strdup(path);
+    } else {
+        info_list[info_list_len].path = NULL;
     }
+    info_list[info_list_len].is_required = is_required;
+    info_list_len++;
 
     dkc_set_current_compiler(compiler_backup);
+}
 
+static DVM_Executable *
+do_compile(DKC_Compiler *compiler, DVM_ExecutableList *list, char *path,
+           DVM_Boolean is_required)
+{
+    DVM_Executable *exe;
+
+    do_just_compile(compiler, path, is_required);
+
+    for (int i = 0; i < info_list_len; i++) {
+        DVM_ExecutableInfo info = info_list[i];
+
+        // switch compiler
+        dkc_set_current_compiler(info.compiler);
+
+        // add interfaces for all class to dvm_class
+        for (ClassDefinition *cls_df = info.compiler->class_definition_list;
+             cls_df; cls_df = cls_df->next) {
+          for (ExtendsList *if_df = cls_df->interface_list;
+              if_df; if_df = if_df->next) {
+              dkc_fix_add_class(if_df->class_definition);
+          }
+        }
+
+        // generate exe
+        exe = dkc_generate(info.compiler);
+        exe->path = info.path;
+        exe->is_required = info.is_required;
+        if (!add_exe_to_list(exe, list)) {
+            dvm_dispose_executable(exe);
+        }
+    }
+
+    dkc_set_current_compiler(compiler);
     return exe;
 }
 
