@@ -420,6 +420,23 @@ do_compile(DKC_Compiler *compiler, DVM_ExecutableList *list, char *path,
 
     do_just_compile(compiler, path, is_required);
 
+     // merge required_list
+     for (int i = 0; i < info_list_len; i++) {
+         DKC_Compiler *comp = info_list[i].compiler;
+
+         for (int j = 0; j < info_list_len; j++) {
+             DKC_Compiler *r_comp = info_list[j].compiler;
+             if (dkc_compare_package_name(comp->package_name,
+                                          r_comp->package_name)) {
+               continue;
+             }
+             if (!search_compiler(comp->required_list, r_comp->package_name)) {
+                 comp->required_list =
+                         add_compiler_to_list(comp->required_list, r_comp);
+             }
+         }
+     }
+
     for (int i = 0; i < info_list_len; i++) {
         DVM_ExecutableInfo info = info_list[i];
 
@@ -620,7 +637,7 @@ traversal_compiler(CompilerList *list, DKC_Compiler *compiler)
 
     for (list_pos = list; list_pos; list_pos = list_pos->next) {
         if (list_pos->compiler == compiler)
-            break;
+            return list;
     }
     if (list_pos == NULL) {
         list = add_compiler_to_list(list, compiler);
