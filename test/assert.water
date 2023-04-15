@@ -1,3 +1,5 @@
+use water.lang;
+
 struct Panic : RuntimeException {
   override
   pub constructor initialize(message: str) {

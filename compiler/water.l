@@ -132,7 +132,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"str"          return STRING_T;
 <INITIAL>"native_pointer"       return NATIVE_POINTER_T;
 <INITIAL>"New"          return NEW;
-<INITIAL>"require"      return REQUIRE;
+<INITIAL>"use"          return REQUIRE;
 <INITIAL>"rename"       return RENAME;
 <INITIAL>"struct"       return CLASS_T;
 <INITIAL>"interface"    return INTERFACE_T;
