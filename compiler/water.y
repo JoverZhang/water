@@ -971,6 +971,16 @@ method_function_definition
         {
             $$ = dkc_static_method_function_define($6, $2, NULL, $7, $8);
         }
+        | FN IDENTIFIER LP parameter_list RP
+          ARROW type_specifier throws_clause SEMICOLON
+        {
+            $$ = dkc_static_method_function_define($7, $2, $4, $8, NULL);
+        }
+        | FN IDENTIFIER LP RP
+          ARROW type_specifier throws_clause SEMICOLON
+        {
+            $$ = dkc_static_method_function_define($6, $2, NULL, $7, NULL);
+        }
         | FN IDENTIFIER LP THIS_T COMMA parameter_list RP
           ARROW type_specifier throws_clause SEMICOLON
         {
