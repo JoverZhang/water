@@ -527,6 +527,10 @@ primary_no_new_array
         {
             $$ = dkc_create_new_expression($1, "instantiating_struct_constructor", $3);
         }
+        | IDENTIFIER LC named_argument_list COMMA RC
+        {
+            $$ = dkc_create_new_expression($1, "instantiating_struct_constructor", $3);
+        }
         ;
 array_literal
         : LB RB
