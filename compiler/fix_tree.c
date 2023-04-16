@@ -2998,6 +2998,7 @@ add_instantiating_struct_constructor(ClassDefinition *cd) {
     }
 
     ParameterList *parameter_list = NULL;
+    ParameterList *last_parameter = NULL;
     Block *block = dkc_alloc_block();
     block->statement_list = NULL;
     for (member_pos = cd->member; member_pos;
@@ -3009,9 +3010,11 @@ add_instantiating_struct_constructor(ClassDefinition *cd) {
                 member_pos->u.field.type,
                 member_pos->u.field.name);
             if (parameter_list) {
-                parameter_list->next = parameter;
+                last_parameter->next = parameter;
+                last_parameter = parameter;
             } else {
                 parameter_list = parameter;
+                last_parameter = parameter;
             }
 
             // block
