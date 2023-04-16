@@ -126,3 +126,11 @@ pub struct String {
     return String { val: s };
   }
 }
+
+pub struct Hasher {
+  pub fn hash(val: Any) -> i32;
+
+  pub fn hash_str(val: str) -> i32 {
+    return Hasher::hash(String::new(val));
+  }
+}

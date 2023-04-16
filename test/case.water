@@ -2,6 +2,7 @@
 // require
 use water.lang;
 use assert;
+// use map;
 
 ///////////////////////////////////////
 //// rename
@@ -402,3 +403,20 @@ fn test_native_call() -> void {
   println("success: test_native_call()");
 }
 test_native_call();
+
+///////////////////////////////////////////////////////////////////////////////
+// std
+
+fn test_std_hasher() -> void {
+  test_assert(Hasher::hash_str("42") == Hasher::hash_str("42"));
+  test_assert(Hasher::hash_str("42") != Hasher::hash_str("32"));
+
+  let p = Point{ x: 10, y: 20 };
+  test_assert(Hasher::hash(p) == Hasher::hash(p));
+  test_assert(Hasher::hash(p) != Hasher::hash(Point{ x: 10, y: 20 }));
+
+  test_assert(Hasher::hash(null) == 0);
+
+  println("success: test_std_hasher()");
+}
+test_std_hasher();

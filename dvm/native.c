@@ -315,6 +315,48 @@ nv_random_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     return ret;
 }
 
+/**
+ * algorithm: djb2
+ * see: http://www.cse.yorku.ca/~oz/hash.html
+ */
+static int
+do_hash_str(DVM_Char *str) {
+  int hash = 5381;
+  int c;
+  while ((c = *str++)) {
+    hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+  }
+  return hash;
+}
+
+static DVM_Value
+nv_hash(DVM_VirtualMachine *dvm, DVM_Context *context,
+                  int arg_count, DVM_Value *args)
+{
+    DVM_Value ret;
+    DVM_Value val = args[0];
+
+    if (is_object_null(val.object)) {
+        ret.int_value = 0;
+        return ret;
+    }
+
+    // is String
+    if (dvm_compare_string(val.object.v_table->exec_class->package_name,
+                           "water.lang") &&
+        dvm_compare_string(val.object.v_table->exec_class->name,
+                           "String")) {
+        ret.int_value = do_hash_str(val.object.data->u.class_object.field->
+                object.data->u.string.string);
+    }
+    // is Object
+    else {
+        ret.int_value = (int) (int64_t) val.object.data;
+    }
+
+    return ret;
+}
+
 static DVM_Value
 nv_parse_int_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
                   int arg_count, DVM_Value *args)
@@ -798,6 +840,8 @@ dvm_add_native_functions(DVM_VirtualMachine *dvm)
                             nv_randomize_proc, 0,
                             DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, "water.lang", "random", nv_random_proc, 1,
+                            DVM_FALSE, DVM_FALSE);
+    DVM_add_native_function(dvm, "water.lang", "Hasher::hash", nv_hash, 1,
                             DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, "water.lang", "parse_int", nv_parse_int_proc,
                             1, DVM_FALSE, DVM_FALSE);
