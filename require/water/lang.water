@@ -55,7 +55,7 @@ abstract pub struct Exception {
   pub fn print_stack_trace(this) -> void {
     let i: i32;
     println("Exception: " + this.message);
-    for (i = this.stack_trace.size() - 1; i >= 0 ; i--) {
+    for (i = 0; i < this.stack_trace.size() ; i++) {
       println("\tat "
         + this.stack_trace[i].function_name
         + "(" + this.stack_trace[i].file_name
