@@ -1,11 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////
 // require
 use water.lang;
-use assert;
+use water.assert;
 
 ///////////////////////////////////////
 //// rename
-rename assert.assert assert2;
+rename water.assert.assert assert2;
 
 assert(true, "failed to rename function");
 assert2(true, "failed to rename function");
