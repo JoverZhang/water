@@ -3001,6 +3001,7 @@ add_instantiating_struct_constructor(ClassDefinition *cd) {
     ParameterList *last_parameter = NULL;
     Block *block = dkc_alloc_block();
     block->statement_list = NULL;
+    StatementList *last_statement_list = block->statement_list;
     for (member_pos = cd->member; member_pos;
          member_pos = member_pos->next) {
         if (member_pos->kind == FIELD_MEMBER) {
@@ -3011,11 +3012,10 @@ add_instantiating_struct_constructor(ClassDefinition *cd) {
                 member_pos->u.field.name);
             if (parameter_list) {
                 last_parameter->next = parameter;
-                last_parameter = parameter;
             } else {
                 parameter_list = parameter;
-                last_parameter = parameter;
             }
+            last_parameter = parameter;
 
             // block
             Expression *assign_expr = dkc_create_assign_expression(
@@ -3030,11 +3030,11 @@ add_instantiating_struct_constructor(ClassDefinition *cd) {
                     dkc_create_statement_list(statement);
 
             if (block->statement_list) {
-                block->statement_list->next =
-                        statement_list;
+                last_statement_list->next = statement_list;
             } else {
                 block->statement_list = statement_list;
             }
+            last_statement_list = statement_list;
         }
         tail = member_pos;
     }
