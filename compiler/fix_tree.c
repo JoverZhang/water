@@ -237,15 +237,16 @@ static DVM_Boolean
 is_super_interface(ClassDefinition *child, ClassDefinition *parent,
                    int *interface_index_out)
 {
-    ExtendsList *pos;
+    ExtendsList *tail = NULL;
     int interface_index = 0;
 
-    for (pos = child->interface_list; pos; pos = pos->next) {
+    for (ExtendsList *pos = child->interface_list; pos; pos = pos->next) {
         if (pos->class_definition == parent) {
             *interface_index_out = interface_index;
             return DVM_TRUE;
         }
         interface_index++;
+        tail = pos;
     }
 
     // interface inference
@@ -281,9 +282,9 @@ is_super_interface(ClassDefinition *child, ClassDefinition *parent,
     // append interface to interface_list of child
     ExtendsList *interface_list = dkc_create_extends_list(parent->name);
     interface_list->class_definition = parent;
-    if (pos) {
-        pos->next = interface_list;
-        *interface_index_out = interface_index + 1;
+    if (tail) {
+        tail->next = interface_list;
+        *interface_index_out = interface_index;
     } else {
         child->interface_list = interface_list;
         *interface_index_out = 0;
