@@ -354,6 +354,11 @@ nv_hash(DVM_VirtualMachine *dvm, DVM_Context *context,
         ret.int_value = (int) (int64_t) val.object.data;
     }
 
+    // fix negative
+    if (ret.int_value < 0) {
+        ret.int_value = -ret.int_value;
+    }
+
     return ret;
 }
 
