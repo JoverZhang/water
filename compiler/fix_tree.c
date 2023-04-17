@@ -1621,7 +1621,7 @@ check_member_accessibility(int line_number,
 
     if (compiler->current_class_definition == NULL
         || compiler->current_class_definition != target_class) {
-        if (member->access_modifier != DVM_PUBLIC_ACCESS) {
+        if (member->access_modifier == DVM_PRIVATE_ACCESS) {
             dkc_compile_error(line_number,
                               PRIVATE_MEMBER_ACCESS_ERR,
                               STRING_MESSAGE_ARGUMENT, "member_name",
