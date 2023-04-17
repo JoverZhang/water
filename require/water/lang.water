@@ -122,9 +122,20 @@ pub interface Any {
 pub struct String {
   pub val: str;
 
-  pub fn new(s: str) -> String {
-    return String { val: s };
+  pub fn new(val: str) -> String {
+    return String{ val: val };
   }
+}
+
+pub struct I32 {
+  pub val: i32;
+
+  pub fn new(val: i32) -> I32 {
+    return I32{ val: val };
+  }
+
+  pub fn MIN_VALUE() -> i32 { return 0x80000000; }
+  pub fn MAX_VALUE() -> i32 { return 0x7fffffff; }
 }
 
 pub struct Hasher {
