@@ -1,0 +1,178 @@
+use water.lang;
+use water.assert;
+
+struct Node {
+  key: str;
+  val: Any;
+  next: Node;
+
+  pub fn new(key: str, val: Any) -> Node {
+    return Node{ key: key, val: val, next: null };
+  }
+}
+
+pub struct HashMap {
+  table: Node[];
+  size_: i32;
+  threshold: i32;
+
+  pub fn new() -> HashMap {
+    let threshold = 16;
+    return HashMap{
+      table: New Node[threshold],
+      size_: 0,
+      threshold: threshold,
+    };
+  }
+
+  pub fn put(this, key: str, val: Any) -> Any {
+    let hash = Hasher::hash_str(key);
+    let i = hash % this.threshold;
+    let slot = this.table[i];
+    let old: Any = null;
+    if (slot == null) {
+      this.table[i] = Node::new(key, val);
+    } else {
+      let node = slot;
+      for (;;) {
+        if (Hasher::hash_str(node.key) == hash) {
+          old = node.val;
+          node.val = val;
+          break;
+        }
+        if (node.next == null) {
+          node.next = Node::new(key, val);
+          break;
+        }
+        node = node.next;
+      }
+    }
+
+    if (old != null) {
+      return old;
+    }
+
+    this.size_++;
+    if (this.size_ > this.threshold) {
+      this.resize();
+    }
+    return old;
+  }
+
+  pub fn get(this, key: str) -> Any {
+    let hash = Hasher::hash_str(key);
+    let i = hash % this.threshold;
+    let slot = this.table[i];
+    if (slot == null) {
+      return null;
+    }
+    for (let node = slot; node != null; node = node.next) {
+      if (Hasher::hash_str(node.key) == hash) {
+        return node.val;
+      }
+    }
+    return null;
+  }
+
+  pub fn keys(this) -> str[] {
+    let list = New str[0];
+    for (let i = 0; i < this.table.size(); i++) {
+      let slot = this.table[i];
+      for (let node = slot; node != null; node = node.next) {
+        list.add(node.key);
+      }
+    }
+    return list;
+  }
+
+  pub fn size(this) -> i32 {
+    return this.size_;
+  }
+
+  fn resize(this) -> void {
+    let old_table = this.table;
+    if (this.threshold >= HashMap::MAX_CAPACITY()) {
+      this.threshold = I32::MAX_VALUE();
+      return;
+    }
+    // double the threshold and clean map
+    this.threshold *= 2;
+    this.size_ = 0;
+    this.table = New Node[this.threshold];
+
+    // migrate the elements from old_table to new table
+    for (let i = 0; i < old_table.size(); i++) {
+      let slot = old_table[i];
+      for (let node = slot; node != null; node = node.next) {
+        this.put(node.key, node.val);
+      }
+    }
+  }
+
+  fn MAX_CAPACITY() -> i32 { return I32::MAX_VALUE() / 2; }
+}
+
+fn test_std_hashmap() -> void {
+  let map = HashMap::new();
+  map.put("a", String::new("123"));
+  map.put("b", String::new("456"));
+  map.put("c", String::new("789"));
+
+  test_assert(map.get("a").(String).val == "123");
+  test_assert(map.get("b").(String).val == "456");
+  test_assert(map.get("c").(String).val == "789");
+
+  test_assert(map.size() == 3);
+  test_assert(map.keys().size() == 3);
+
+  // orverride
+  test_assert(map.put("a", String::new("000")).(String).val == "123");
+
+  test_assert(map.get("a").(String).val == "000");
+  test_assert(map.get("b").(String).val == "456");
+  test_assert(map.get("c").(String).val == "789");
+
+  test_assert(map.size() == 3);
+  test_assert(map.keys().size() == 3);
+
+  // resize
+  map.put("d", String::new("4"));
+  map.put("e", String::new("5"));
+  map.put("f", String::new("6"));
+  map.put("g", String::new("7"));
+  map.put("h", String::new("8"));
+  map.put("i", String::new("9"));
+  map.put("j", String::new("10"));
+  map.put("k", String::new("11"));
+  map.put("l", String::new("12"));
+  map.put("m", String::new("13"));
+  map.put("n", String::new("14"));
+  map.put("o", String::new("15"));
+  map.put("p", String::new("16"));
+
+  test_assert(map.size() == 16);
+  test_assert(map.threshold == 16);
+  map.put("q", String::new("17"));
+  test_assert(map.size() == 17);
+  test_assert(map.threshold == 32);
+
+  test_assert(map.get("a").(String).val == "000");
+  test_assert(map.get("b").(String).val == "456");
+  test_assert(map.get("c").(String).val == "789");
+  test_assert(map.get("d").(String).val == "4");
+  test_assert(map.get("e").(String).val == "5");
+  test_assert(map.get("f").(String).val == "6");
+  test_assert(map.get("g").(String).val == "7");
+  test_assert(map.get("h").(String).val == "8");
+  test_assert(map.get("i").(String).val == "9");
+  test_assert(map.get("j").(String).val == "10");
+  test_assert(map.get("k").(String).val == "11");
+  test_assert(map.get("l").(String).val == "12");
+  test_assert(map.get("m").(String).val == "13");
+  test_assert(map.get("n").(String).val == "14");
+  test_assert(map.get("o").(String).val == "15");
+  test_assert(map.get("p").(String).val == "16");
+
+  println("success: test_std_hashmap()");
+}
+test_std_hashmap();
