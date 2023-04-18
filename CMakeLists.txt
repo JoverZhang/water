@@ -28,3 +28,12 @@ add_executable(water
         $<TARGET_OBJECTS:mem>
         $<TARGET_OBJECTS:share>
         )
+
+find_program(BASH_PROGRAM bash)
+if (BASH_PROGRAM)
+    add_test(NAME integration_testing
+            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+            COMMAND sh test/run.sh)
+endif ()
+
+enable_testing()
