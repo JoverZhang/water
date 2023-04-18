@@ -3,31 +3,6 @@ fn println(s: str) -> void {
   print(s + "\n");
 }
 
-pub struct File {
-  pub fp: native_pointer;
-  constructor initialize(fp: native_pointer) {
-    this.fp = fp;
-  }
-}
-
-fn fopen(file_name: str, mode: str) -> File {
-  let fp = __fopen(file_name, mode);
-  if (fp == null) {
-    return null;
-  } else {
-    return File{ fp: fp };
-  }
-}
-fn fgets(file: File) -> str{
-  return __fgets(file.fp);
-}
-fn fputs(s: str, file: File) -> void {
-  __fputs(s, file.fp);
-}
-fn fclose(file: File) -> void {
-  __fclose(file.fp);
-}
-
 fn to_f64(i32_value: i32) -> f64 {
   return i32_value;
 }
@@ -105,17 +80,6 @@ delegate fn HogeDelegate(value: i32) -> i32;
 
 // BUGBUG for test routine
 fn test_native(dele: HogeDelegate) -> void;
-
-fn foo_file(file: File) -> void {
-}
-
-// native
-
-fn __fopen(file_name: str, mode: str) -> native_pointer;
-fn __fgets(fp: native_pointer) -> str;
-fn __fputs(s: str, fp: native_pointer) -> void;
-fn __fclose(fp: native_pointer) -> void;
-
 
 // lang
 

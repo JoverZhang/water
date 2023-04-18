@@ -1,0 +1,4 @@
+fn __fopen(file_name: str, mode: str) -> native_pointer;
+fn __fgets(fp: native_pointer) -> str;
+fn __fputs(s: str, fp: native_pointer) -> void;
+fn __fclose(fp: native_pointer) -> void;

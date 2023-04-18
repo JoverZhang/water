@@ -831,14 +831,6 @@ dvm_add_native_functions(DVM_VirtualMachine *dvm)
 {
     DVM_add_native_function(dvm, "water.lang", "print", nv_print_proc, 1,
                             DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "water.lang", "__fopen", nv_fopen_proc, 2,
-                            DVM_FALSE, DVM_TRUE);
-    DVM_add_native_function(dvm, "water.lang", "__fgets", nv_fgets_proc, 1,
-                            DVM_FALSE, DVM_TRUE);
-    DVM_add_native_function(dvm, "water.lang", "__fputs", nv_fputs_proc, 2,
-                            DVM_FALSE, DVM_FALSE);
-    DVM_add_native_function(dvm, "water.lang", "__fclose", nv_fclose_proc, 1,
-                            DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, "water.lang", "exit", nv_exit_proc, 1,
                             DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, "water.lang", "randomize",
@@ -893,6 +885,15 @@ dvm_add_native_functions(DVM_VirtualMachine *dvm)
     DVM_add_native_function(dvm, "water.math", "tanh", nv_tanh_proc, 1,
                             DVM_FALSE, DVM_FALSE);
 
+    /* fs */
+    DVM_add_native_function(dvm, "water.native.fs", "__fopen", nv_fopen_proc, 2,
+                            DVM_FALSE, DVM_TRUE);
+    DVM_add_native_function(dvm, "water.native.fs", "__fgets", nv_fgets_proc, 1,
+                            DVM_FALSE, DVM_TRUE);
+    DVM_add_native_function(dvm, "water.native.fs", "__fputs", nv_fputs_proc, 2,
+                            DVM_FALSE, DVM_FALSE);
+    DVM_add_native_function(dvm, "water.native.fs", "__fclose", nv_fclose_proc, 1,
+                            DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, BUILT_IN_METHOD_PACKAGE_NAME,
                             ARRAY_PREFIX ARRAY_METHOD_SIZE,
                             nv_array_size_proc, 0, DVM_TRUE, DVM_FALSE);
