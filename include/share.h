@@ -31,6 +31,7 @@ typedef enum {
 #define EXCEPTION_CLASS_NAME ("Exception")
 #define BUG_EXCEPTION_CLASS_NAME ("BugException")
 #define RUNTIME_EXCEPTION_CLASS_NAME ("RuntimeException")
+#define ARGUMENT_EXCEPTION_NAME ("ArgumentException")
 #define ARRAY_INDEX_EXCEPTION_NAME ("ArrayIndexOutOfBoundsException")
 #define STRING_INDEX_EXCEPTION_NAME ("StringIndexOutOfBoundsException")
 #define DIVISION_BY_ZERO_EXCEPTION_NAME ("DivisionByZeroException")
