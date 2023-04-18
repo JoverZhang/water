@@ -86,7 +86,7 @@ struct ToStringClass : ToString {
   pub fn to_str(this) -> str { return "ToStringClass()"; }
 }
 fn test_interface() -> void {
-  let o: ToString = ToStringClass{};
+  let o: ToString = ToStringClass {};
   test_assert("ToStringClass()" == o.to_str());
 
   println("success: test_interface()");
@@ -179,7 +179,7 @@ test_cast();
 ///////////////////////////////////////////////////////////////////////////////
 // downcast
 fn test_downcast() -> void {
-  let o = ToStringClass{};
+  let o = ToStringClass {};
   let t: ToString = o;
   o = t.(ToStringClass);
   test_assert("ToStringClass()" == t.(ToStringClass).to_str());
@@ -191,7 +191,7 @@ test_downcast();
 ///////////////////////////////////////////////////////////////////////////////
 // instanceof
 fn test_instanceof() -> void {
-  let o: ToString = ToStringClass{};
+  let o: ToString = ToStringClass {};
   test_assert(o instanceof ToStringClass);
   // test_assert(o instanceof ToString); // always is true
 
@@ -410,9 +410,9 @@ fn test_std_hasher() -> void {
   test_assert(Hasher::hash_str("42") == Hasher::hash_str("42"));
   test_assert(Hasher::hash_str("42") != Hasher::hash_str("32"));
 
-  let p = Point{ x: 10, y: 20 };
+  let p = Point { x: 10, y: 20 };
   test_assert(Hasher::hash(p) == Hasher::hash(p));
-  test_assert(Hasher::hash(p) != Hasher::hash(Point{ x: 10, y: 20 }));
+  test_assert(Hasher::hash(p) != Hasher::hash(Point { x: 10, y: 20 }));
 
   test_assert(Hasher::hash(null) == 0);
 
