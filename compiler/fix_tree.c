@@ -2066,6 +2066,73 @@ fix_down_cast_expression(Block *current_block, Expression *expr,
     return expr;
 }
 
+static ArgumentList *
+fix_initializer_argument_list(Expression *expr, MemberDeclaration *member,
+                              ParameterList *parameter_list,
+                              ArgumentList *argument_list) {
+  ParameterList *param = parameter_list;
+  ArgumentList *new_args = NULL;
+  ArgumentList *new_tail = NULL;
+
+  while (param != NULL) {
+
+    ArgumentList *prev = NULL;
+    ArgumentList *curr = argument_list;
+    while (curr != NULL) {
+
+      if (dvm_compare_string(curr->name, param->name)) {
+        if (prev) {
+          prev->next = curr->next;
+        } else {
+          argument_list = argument_list->next;
+        }
+        if (!new_args) {
+          new_args = curr;
+        } else {
+          new_tail->next = curr;
+        }
+        new_tail = curr;
+      }
+
+      prev = curr;
+      curr = curr->next;
+    }
+
+    param = param->next;
+  }
+
+  if (argument_list) {
+    dkc_compile_error(
+        expr->line_number,
+        STRUCT_INITIALIZER_NO_FILED_ERR,
+        STRING_MESSAGE_ARGUMENT, "struct_name",
+        member->u.method.function_definition->class_definition->name,
+        STRING_MESSAGE_ARGUMENT, "field_name",
+        argument_list->name,
+        MESSAGE_ARGUMENT_END);
+  }
+
+  ParameterList *param_head = parameter_list;
+  ArgumentList *arg_head = new_args;
+  while (param_head && arg_head) {
+    if (!dvm_compare_string(param_head->name, arg_head->name)) {
+      dkc_compile_error(
+          expr->line_number,
+          STRUCT_INITIALIZER_MISSING_FIELD_ERR,
+          STRING_MESSAGE_ARGUMENT, "struct_name",
+          member->u.method.function_definition->class_definition->name,
+          STRING_MESSAGE_ARGUMENT, "field_name",
+          param_head->name,
+          MESSAGE_ARGUMENT_END);
+      break;
+    }
+    param_head = param_head->next;
+    arg_head = arg_head->next;
+  }
+
+  return new_args;
+}
+
 static Expression *
 fix_new_expression(Block *current_block, Expression *expr,
                    ExceptionList **el_p)
@@ -2120,6 +2187,15 @@ fix_new_expression(Block *current_block, Expression *expr,
                && member->u.method.function_definition->type->basic_type
                == DVM_VOID_TYPE,
                ("constructor is not void.\n"));
+
+    // fix arguments order for instantiating_struct_constructor
+    if (dvm_compare_string(member->u.method.function_definition->name,
+                           "instantiating_struct_constructor")) {
+        expr->u.new_e.argument = fix_initializer_argument_list(
+                expr, member,
+                member->u.method.function_definition->parameter,
+                expr->u.new_e.argument);
+    }
 
     check_argument(current_block, expr->line_number,
                    member->u.method.function_definition->parameter,
