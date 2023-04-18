@@ -1,0 +1,87 @@
+use water.lang;
+use water.native.fs;
+use water.assert;
+
+enum SeekForm {
+  START,
+  CURRENT,
+  END,
+}
+
+pub struct File {
+  fp: native_pointer;
+
+  pub fn open(path: str) -> File {
+    let fp = __fopen(path, "r+");
+    if (fp == null) {
+      return null;
+    }
+    return File { fp: fp };
+  }
+
+  pub fn create(path: str) -> File {
+    let fp = __fopen(path, "w+");
+    if (fp == null) {
+      return null;
+    }
+    return File { fp: fp };
+  }
+
+  pub fn read(this) -> str {
+    return __fgets(this.fp);
+  }
+
+  pub fn write(this, buf: str) -> void {
+    __fputs(buf, this.fp);
+  }
+
+  pub fn set_len(this, size: i32) -> void {
+    __ftruncate(this.fp, size);
+    this.seek(size, SeekForm.START);
+  }
+
+  pub fn seek(this, pos: i32, seek_form: SeekForm) -> void {
+    let whence: i32;
+    if (seek_form == SeekForm.START) { whence = 0; }
+    else if (seek_form == SeekForm.CURRENT) { whence = 1; }
+    else if (seek_form == SeekForm.END) { whence = 2; }
+    else { whence = 0; }
+    __fseek(this.fp, pos, whence);
+  }
+
+  pub fn close(this) -> void {
+    __fclose(this.fp);
+  }
+}
+
+fn remove_file(path: str) -> void {
+  __remove(path);
+}
+
+
+fn test_std_fs() -> void {
+  let line: str;
+  let original = New str[0];
+
+  let file = File::open("test/hello.txt");
+  while ((line = file.read()) != null) {
+    original.add(line);
+  }
+  file.close();
+
+  file = File::create("test/tmp.txt");
+  file.write("test\n");
+  file.write("write\n");
+  file.close();
+
+  file = File::open("test/tmp.txt");
+  test_assert(file.read() == "test\n");
+  test_assert(file.read() == "write\n");
+  file.close();
+
+  remove_file("test/tmp.txt");
+  test_assert(File::open("test/tmp.txt") == null);
+
+  println("success: test_std_fs()");
+}
+test_std_fs();

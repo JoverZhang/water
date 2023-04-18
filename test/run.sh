@@ -9,6 +9,7 @@ WATER="cmake-*/water"
 tests=(
   # std
   require/water/collections/map.water
+  require/water/fs.water
 
   # tests
   test/case.water
