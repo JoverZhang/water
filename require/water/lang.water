@@ -43,10 +43,10 @@ abstract pub struct Exception {
   }
 }
 
-abstract pub struct BugException : Exception {
+pub abstract struct BugException : Exception {
 }
 
-abstract pub struct RuntimeException : Exception {
+pub abstract struct RuntimeException : Exception {
 }
 
 pub struct NullPointerException : BugException {
