@@ -1,6 +1,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <time.h>
 #include "MEM.h"
 #include "DBG.h"
@@ -33,9 +34,17 @@ typedef enum {
     FPUTS_2ND_ARG_NULL_ERR,
     FPUTS_FP_BAD_TYPE_ERR,
     FPUTS_FP_INVALID_ERR,
+    FSEEK_1ST_ARG_NULL_ERR,
+    FSEEK_2ND_ARG_NULL_ERR,
+    FSEEK_3RD_ARG_NULL_ERR,
+    FSEEK_FP_INVALID_ERR,
+    FTRUNCATE_1ST_ARG_NULL_ERR,
+    FTRUNCATE_2ND_ARG_NULL_ERR,
+    FTRUNCATE_FP_INVALID_ERR,
     FCLOSE_ARG_NULL_ERR,
     FCLOSE_FP_BAD_TYPE_ERR,
     FCLOSE_FP_INVALID_ERR,
+    REMOVE_1ST_ARG_NULL_ERR,
     PARSE_INT_ARG_NULL_ERR,
     PARSE_INT_FORMAT_ERR,
     PARSE_DOUBLE_ARG_NULL_ERR,
@@ -84,6 +93,7 @@ nv_fopen_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     char *file_name;
     char *mode;
     FILE *fp;
+    ret.object = dvm_null_object_ref;
 
     DBG_assert(arg_count == 2, ("arg_count..%d", arg_count));
 
@@ -107,8 +117,10 @@ nv_fopen_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     mode = DVM_wcstombs(args[1].object.data->u.string.string);
     fp = fopen(file_name, mode);
     MEM_free(file_name);
-    MEM_free(mode);
 
+    if (fp == NULL) {
+        return ret;
+    }
     ret.object = DVM_create_native_pointer(dvm, context, fp,
                                            &st_file_type_info);
 
@@ -236,6 +248,99 @@ nv_fputs_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
 }
 
 static DVM_Value
+nv_fseek_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
+                int arg_count, DVM_Value *args)
+{
+  DVM_Value ret;
+  FILE *fp;
+  int offset;
+  int whence;
+  ret.int_value = 0;
+
+  DBG_assert(arg_count == 3, ("arg_count..%d", arg_count));
+
+  if (is_object_null(args[0].object)) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      DVM_NULL_POINTER_EXCEPTION_NAME,
+                      FSEEK_1ST_ARG_NULL_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+  }
+  if (args[1].int_value < 0) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      ARGUMENT_EXCEPTION_NAME,
+                      FSEEK_2ND_ARG_NULL_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+  }
+  if (args[2].int_value < 0 || 2 < args[2].int_value) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      ARGUMENT_EXCEPTION_NAME,
+                      FSEEK_3RD_ARG_NULL_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+  }
+
+  fp = DVM_object_get_native_pointer(args[0].object.data);
+  offset = args[1].int_value;
+  whence = args[2].int_value;
+
+  if (fp == NULL) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      DVM_NULL_POINTER_EXCEPTION_NAME,
+                      FPUTS_FP_INVALID_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+  }
+
+  fseek(fp, offset, whence);
+
+  return ret;
+}
+
+static DVM_Value
+nv_ftruncate_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
+                  int arg_count, DVM_Value *args)
+{
+  DVM_Value ret;
+  FILE *fp;
+  int length;
+  ret.int_value = 0;
+
+  DBG_assert(arg_count == 2, ("arg_count..%d", arg_count));
+
+  if (is_object_null(args[0].object)) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      DVM_NULL_POINTER_EXCEPTION_NAME,
+                      FTRUNCATE_1ST_ARG_NULL_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+  }
+
+  fp = DVM_object_get_native_pointer(args[0].object.data);
+  length = args[1].int_value;
+
+  if (fp == NULL) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      DVM_NULL_POINTER_EXCEPTION_NAME,
+                      FTRUNCATE_FP_INVALID_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+
+  }
+
+  ftruncate(fileno(fp), length);
+
+  return ret;
+}
+
+static DVM_Value
 nv_fclose_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
                int arg_count, DVM_Value *args)
 {
@@ -276,6 +381,32 @@ nv_fclose_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     DVM_object_set_native_pointer(args[0].object.data, NULL);
 
     return ret;
+}
+
+static DVM_Value
+nv_remove_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
+               int arg_count, DVM_Value *args)
+{
+  DVM_Value ret;
+  char *file_name;
+  ret.int_value = 0;
+
+  DBG_assert(arg_count == 1, ("arg_count..%d", arg_count));
+
+  if (is_object_null(args[0].object)) {
+    DVM_set_exception(dvm, context, &st_lib_info,
+                      DVM_WATER_DEFAULT_PACKAGE,
+                      DVM_NULL_POINTER_EXCEPTION_NAME,
+                      REMOVE_1ST_ARG_NULL_ERR,
+                      DVM_MESSAGE_ARGUMENT_END);
+    return ret;
+  }
+
+  file_name = DVM_wcstombs(args[0].object.data->u.string.string);
+  remove(file_name);
+  MEM_free(file_name);
+
+  return ret;
 }
 
 static DVM_Value
@@ -892,8 +1023,15 @@ dvm_add_native_functions(DVM_VirtualMachine *dvm)
                             DVM_FALSE, DVM_TRUE);
     DVM_add_native_function(dvm, "water.native.fs", "__fputs", nv_fputs_proc, 2,
                             DVM_FALSE, DVM_FALSE);
+    DVM_add_native_function(dvm, "water.native.fs", "__fseek", nv_fseek_proc, 3,
+                            DVM_FALSE, DVM_FALSE);
+    DVM_add_native_function(dvm, "water.native.fs", "__ftruncate", nv_ftruncate_proc, 2,
+                            DVM_FALSE, DVM_TRUE);
     DVM_add_native_function(dvm, "water.native.fs", "__fclose", nv_fclose_proc, 1,
                             DVM_FALSE, DVM_FALSE);
+    DVM_add_native_function(dvm, "water.native.fs", "__remove", nv_remove_proc, 1,
+                            DVM_FALSE, DVM_FALSE);
+
     DVM_add_native_function(dvm, BUILT_IN_METHOD_PACKAGE_NAME,
                             ARRAY_PREFIX ARRAY_METHOD_SIZE,
                             nv_array_size_proc, 0, DVM_TRUE, DVM_FALSE);

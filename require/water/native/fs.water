@@ -1,4 +1,7 @@
 fn __fopen(file_name: str, mode: str) -> native_pointer;
 fn __fgets(fp: native_pointer) -> str;
 fn __fputs(s: str, fp: native_pointer) -> void;
+fn __fseek(fp: native_pointer, offset: i32, whence: i32) -> void;
+fn __ftruncate(fp: native_pointer, length: i32) -> void;
 fn __fclose(fp: native_pointer) -> void;
+fn __remove(file_name: str) -> void;
