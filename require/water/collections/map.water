@@ -7,7 +7,7 @@ struct Node {
   next: Node;
 
   pub fn new(key: str, val: Any) -> Node {
-    return Node{ key: key, val: val, next: null };
+    return Node { key: key, val: val, next: null };
   }
 }
 
@@ -18,7 +18,7 @@ pub struct HashMap {
 
   pub fn new() -> HashMap {
     let threshold = 16;
-    return HashMap{
+    return HashMap {
       table: New Node[threshold],
       size_: 0,
       threshold: threshold,
