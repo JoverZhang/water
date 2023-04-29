@@ -13,7 +13,7 @@ main(int argc, char **argv)
     DVM_VirtualMachine *dvm;
 
     if (argc < 2) {
-        fprintf(stderr, "usage:%s filename arg1, arg2, ...", argv[0]);
+        fprintf(stderr, "usage: %s <file> [args...]\n", argv[0]);
         exit(1);
     }
 
