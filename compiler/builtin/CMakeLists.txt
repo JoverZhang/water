@@ -16,6 +16,5 @@ add_custom_command(
         ../../require/water/math.water
 )
 
-add_library(builtin OBJECT
-        ${CMAKE_CURRENT_SOURCE_DIR}/builtin.c
-        )
+add_library(builtin STATIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/builtin.c)

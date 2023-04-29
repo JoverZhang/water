@@ -1,6 +1,6 @@
 set(CMAKE_C_FLAGS "-DDEBUG -Wall -ansi -pedantic -Wswitch-enum")
 
-add_library(dvm OBJECT
+add_library(dvm STATIC
         error.c
         error_message.c
         execute.c

@@ -15,19 +15,18 @@ add_subdirectory(dvm)
 add_subdirectory(memory)
 add_subdirectory(share)
 
-set(CMAKE_C_FLAGS "-Wall -ansi -Wswitch-enum -DDEBUG")
-add_library(main OBJECT main/main.c)
+add_executable(water main/main.c)
 
-set(CMAKE_C_FLAGS "-lm")
-add_executable(water
-        $<TARGET_OBJECTS:main>
-        $<TARGET_OBJECTS:compiler>
-        $<TARGET_OBJECTS:builtin>
-        $<TARGET_OBJECTS:dbg>
-        $<TARGET_OBJECTS:dvm>
-        $<TARGET_OBJECTS:mem>
-        $<TARGET_OBJECTS:share>
-        )
+set(CMAKE_EXE_LINKER_FLAGS "-static")
+target_link_libraries(
+        water PRIVATE
+        compiler
+        builtin
+        dbg
+        dvm
+        mem
+        share
+        m)
 
 find_program(BASH_PROGRAM bash)
 if (BASH_PROGRAM)
@@ -48,5 +47,3 @@ if (BASH_PROGRAM)
             COMMAND sh test/run.sh ${CMAKE_BINARY_DIR}/water
             ${CMAKE_CURRENT_SOURCE_DIR}/require/water/fs.water)
 endif ()
-
-enable_testing()

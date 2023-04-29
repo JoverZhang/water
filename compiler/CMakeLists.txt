@@ -11,7 +11,7 @@ bison_target(PARSER water.y ${CMAKE_CURRENT_BINARY_DIR}/y.tab.c
         DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/y.tab.h)
 add_flex_bison_dependency(LEXER PARSER)
 
-add_library(compiler OBJECT
+add_library(compiler STATIC
         ${BISON_PARSER_OUTPUTS}
         ${FLEX_LEXER_OUTPUTS}
         create.c
