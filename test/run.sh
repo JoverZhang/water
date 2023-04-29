@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export DKM_REQUIRE_SEARCH_PATH="$PWD/require:$PWD/test"
+export WATER_HOME="$PWD/require:$PWD/test"
 
 WATER="$1"
 FILE="$2"
