@@ -352,6 +352,44 @@ static DVM_ExecutableInfo info_list[100];
 static int info_list_len = 0;
 
 static void
+append_function_call_expression(DKC_Compiler *compiler, char *name) {
+    StatementList *func_call = dkc_create_statement_list(
+        dkc_create_expression_statement(
+            dkc_create_function_call_expression(
+                dkc_create_identifier_expression(name), NULL)));
+    if (!compiler->statement_list) {
+        compiler->statement_list = func_call;
+    } else {
+        for (StatementList *pos = compiler->statement_list;
+             pos; pos = pos->next) {
+
+            if (pos->next == NULL) {
+                pos->next = func_call;
+                break;
+            }
+        }
+    }
+}
+
+static void
+append_main_call(DKC_Compiler *compiler) {
+    for (FunctionDefinition * fpos = compiler->function_list;
+        fpos; fpos = fpos->next) {
+
+        if (fpos->class_definition == NULL &&
+            dvm_compare_string(fpos->name, "main")) {
+            append_function_call_expression(compiler, fpos->name);
+            break;
+        }
+    }
+}
+
+static void
+add_entrypoint(DKC_Compiler *compiler) {
+      append_main_call(compiler);
+}
+
+static void
 do_just_compile(DKC_Compiler *compiler, char *path, DVM_Boolean is_required) {
     extern FILE *yyin;
     extern int yyparse(void);
@@ -395,6 +433,10 @@ do_just_compile(DKC_Compiler *compiler, char *path, DVM_Boolean is_required) {
             dkc_set_source_string(source_input.u.string.lines);
         }
         do_just_compile(req_comp, found_path, DVM_TRUE);
+    }
+
+    if (!compiler->package_name) {
+        add_entrypoint(compiler);
     }
 
     dkc_fix_tree(compiler);
