@@ -353,3 +353,9 @@ fn test_std_hasher(t: Testing) -> void {
 
   test_assert(Hasher::hash(null) == 0);
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// main
+fn main() -> void {
+  println("SUCCESS: main()");
+}
