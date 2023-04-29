@@ -869,6 +869,8 @@ struct DKC_Compiler_tag {
     int                 string_method_count;
     FunctionDefinition  *string_method;
     Encoding            source_encoding;
+    DVM_Boolean         is_test;
+    char                *test_target;
 };
 
 typedef struct {

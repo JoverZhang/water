@@ -112,7 +112,7 @@ pub struct HashMap {
   fn MAX_CAPACITY() -> i32 { return I32::MAX_VALUE() / 2; }
 }
 
-fn test_std_hashmap() -> void {
+fn test_std_hashmap(t: Testing) -> void {
   let map = HashMap::new();
   map.put("a", String::new("123"));
   map.put("b", String::new("456"));
@@ -172,7 +172,4 @@ fn test_std_hashmap() -> void {
   test_assert(map.get("n").(String).val == "14");
   test_assert(map.get("o").(String).val == "15");
   test_assert(map.get("p").(String).val == "16");
-
-  println("success: test_std_hashmap()");
 }
-test_std_hashmap();

@@ -59,7 +59,7 @@ fn remove_file(path: str) -> void {
 }
 
 
-fn test_std_fs() -> void {
+fn test_std_fs(t: Testing) -> void {
   let line: str;
   let original = New str[0];
 
@@ -81,7 +81,4 @@ fn test_std_fs() -> void {
 
   remove_file("test/tmp.txt");
   test_assert(File::open("test/tmp.txt") == null);
-
-  println("success: test_std_fs()");
 }
-test_std_fs();

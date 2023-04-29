@@ -1,30 +1,59 @@
 #include <stdio.h>
 #include <locale.h>
+#include <string.h>
 #include "DKC.h"
 #include "DVM.h"
 #include "MEM.h"
+
+void
+print_usage() {
+    fprintf(stderr,"Usage:\n"
+                   "\twater <file> [args...]\n"
+                   "\twater test <file> [name] [args...]\n"
+    );
+}
 
 int
 main(int argc, char **argv)
 {
     DKC_Compiler *compiler;
+    char *file;
     FILE *fp;
     DVM_ExecutableList *list;
     DVM_VirtualMachine *dvm;
 
     if (argc < 2) {
-        fprintf(stderr, "usage: %s <file> [args...]\n", argv[0]);
-        exit(1);
-    }
-
-    fp = fopen(argv[1], "r");
-    if (fp == NULL) {
-        fprintf(stderr, "%s not found.\n", argv[1]);
-        exit(1);
+        print_usage();
+        return 1;
     }
 
     setlocale(LC_CTYPE, "");
-    compiler = DKC_create_compiler();
+
+    // test
+    if (!strcmp(argv[1], "test")) {
+        if (argc < 3) {
+          print_usage();
+          return 1;
+        }
+        file = argv[2];
+        if (argc < 4) {
+            compiler = DKC_create_compiler_for_test(NULL);
+        } else {
+            compiler = DKC_create_compiler_for_test(argv[3]);
+        }
+    }
+    // run
+    else {
+        file = argv[1];
+        compiler = DKC_create_compiler();
+    }
+
+    fp = fopen(file, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "%s not found.\n", argv[1]);
+        return 1;
+    }
+
     list = DKC_compile(compiler, fp, argv[1]);
     dvm = DVM_create_virtual_machine();
     DVM_set_executable(dvm, list);

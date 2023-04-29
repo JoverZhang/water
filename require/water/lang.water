@@ -112,3 +112,19 @@ pub struct Hasher {
     return Hasher::hash(String::new(val));
   }
 }
+
+// test
+pub struct Testing {
+
+  pub fn new() -> Testing {
+    return Testing{};
+  }
+
+  pub fn start(name: str) -> void {
+    println("=== RUN   " + name);
+  }
+
+  pub fn end(name: str) -> void {
+    println("--- PASS: " + name + " (0.00s)");
+  }
+}

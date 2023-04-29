@@ -6,6 +6,7 @@
 typedef struct DKC_Compiler_tag DKC_Compiler;
 
 DKC_Compiler *DKC_create_compiler(void);
+DKC_Compiler *DKC_create_compiler_for_test(char *test_target);
 DVM_ExecutableList *DKC_compile(DKC_Compiler *compiler, FILE *fp, char *path);
 void DKC_dispose_compiler(DKC_Compiler *compiler);
 

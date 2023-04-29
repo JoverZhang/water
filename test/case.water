@@ -17,12 +17,9 @@ fn fibonacci(n: i32) -> i32 {
   if (n == 1 || n == 2) { return 1; }
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
-fn test_function() -> void {
+fn test_function(t: Testing) -> void {
   test_assert(55 == fibonacci(10));
-
-  println("success: test_function()");
 }
-test_function();
 
 ///////////////////////////////////////////////////////////////////////////////
 // class
@@ -39,13 +36,10 @@ pub struct Point {
   pub fn set_y(this, y: i32) -> i32 { this.y = y; }
   pub fn to_str(this) -> str { return "Point(x = " + this.x + ", y = " + this.y + ")"; }
 }
-fn test_class_method() -> void {
+fn test_class_method(t: Testing) -> void {
   let point = New Point(10, 20);
   test_assert("Point(x = 10, y = 20)" == point.to_str());
-
-  println("success: test_class_method()");
 }
-test_class_method();
 
 ///////////////////////////////////////
 //// multi constructor
@@ -54,13 +48,10 @@ struct MultiConstructorClass {
   pub constructor initialize() { this.n = 1; }
   pub constructor initialize2() { this.n = 2; }
 }
-fn test_class_multi_constructor() -> void {
+fn test_class_multi_constructor(t: Testing) -> void {
   test_assert(1 == New MultiConstructorClass().n);
   test_assert(2 == New MultiConstructorClass.initialize2().n);
-
-  println("success: test_class_multi_constructor()");
 }
-test_class_multi_constructor();
 
 ///////////////////////////////////////
 //// field init
@@ -69,13 +60,11 @@ struct FieldInitClass {
   pub y: i32 = 10;
   pub fn new() -> FieldInitClass { return FieldInitClass{ x: 0, y: 10 }; }
 }
-fn test_class_field_init() -> void {
+fn test_class_field_init(t: Testing) -> void {
   let o = FieldInitClass::new();
   test_assert(0 == o.x);
   test_assert(10 == o.y);
-  println("success: test_class_field_init()");
 }
-test_class_field_init();
 
 ///////////////////////////////////////
 //// interface
@@ -86,13 +75,10 @@ struct ToStringClass : ToString {
   override
   pub fn to_str(this) -> str { return "ToStringClass()"; }
 }
-fn test_interface() -> void {
+fn test_interface(t: Testing) -> void {
   let o: ToString = ToStringClass {};
   test_assert("ToStringClass()" == o.to_str());
-
-  println("success: test_interface()");
 }
-test_interface();
 
 ///////////////////////////////////////
 //// substruct (keywords: virtual, override and super)
@@ -112,31 +98,25 @@ struct Child : Parent {
   pub fn to_str(this) -> str { return "Child(" + super.to_str() + ", cv = " + this.cv + ")"; }
 }
 
-fn test_class_subclass() -> void {
+fn test_class_subclass(t: Testing) -> void {
   let child = New Child(10, 20);
   test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_str());
-
-  println("success: test_class_subclass()");
 }
-test_class_subclass();
 
 ///////////////////////////////////////////////////////////////////////////////
 // variables
-fn test_variables() -> void {
+fn test_variables(t: Testing) -> void {
   let i = 10;
   let f = 30.2;
   let s = "Hello ";
   test_assert(40.2 == i + f);
   i = i + f;
   test_assert("Hello 40" == s + i);
-
-  println("success: test_variables()");
 }
-test_variables();
 
 ///////////////////////////////////////////////////////////////////////////////
 // array
-fn test_array() -> void {
+fn test_array(t: Testing) -> void {
   let i32_arr = [ 1, 2, 3 ];
   test_assert(3 == i32_arr.size());
   test_assert(1 == i32_arr[0]);
@@ -162,38 +142,29 @@ fn test_array() -> void {
   test_assert(3 == point_arr.size());
   test_assert(p1 == point_arr[0]);
   test_assert(p3 == point_arr[2]);
-
-  println("success: test_array()");
 }
-test_array();
 
 ///////////////////////////////////////////////////////////////////////////////
 // cast
-fn test_cast() -> void {
+fn test_cast(t: Testing) -> void {
   let child = New Child(10, 20);
   let parent1: Parent = child;
   let parent2: Parent = child;
   test_assert(parent1 == parent2);
-
-  println("success: test_cast()");
 }
-test_cast();
 
 ///////////////////////////////////////////////////////////////////////////////
 // downcast
-fn test_downcast() -> void {
+fn test_downcast(t: Testing) -> void {
   let o = ToStringClass {};
-  let t: ToString = o;
-  o = t.(ToStringClass);
-  test_assert("ToStringClass()" == t.(ToStringClass).to_str());
-
-  println("success: test_downcast()");
+  let ts: ToString = o;
+  o = ts.(ToStringClass);
+  test_assert("ToStringClass()" == ts.(ToStringClass).to_str());
 }
-test_downcast();
 
 ///////////////////////////////////////////////////////////////////////////////
 // instanceof
-fn test_instanceof() -> void {
+fn test_instanceof(t: Testing) -> void {
   let o: ToString = ToStringClass {};
   test_assert(o instanceof ToStringClass);
   // test_assert(o instanceof ToString); // always is true
@@ -201,10 +172,7 @@ fn test_instanceof() -> void {
   let child: Parent = New Child(10, 20);
   test_assert(child instanceof Child);
   // test_assert(child instanceof Parent); // always is true
-
-  println("success: test_instanceof()");
 }
-test_instanceof();
 
 ///////////////////////////////////////////////////////////////////////////////
 // delegate
@@ -213,17 +181,14 @@ fn f2i(f: f64) -> i32 { return f; }
 struct DelegateClass {
   pub f: DelegateF2I;
 }
-fn test_delegate() -> void {
+fn test_delegate(t: Testing) -> void {
   let f: DelegateF2I = f2i;
   test_assert(42 == f(42.2));
 
   let o = DelegateClass{ f: f2i };
   let g = o.f;
   test_assert(42 == g(42.2));
-
-  println("success: test_delegate()");
 }
-test_delegate();
 
 ///////////////////////////////////////////////////////////////////////////////
 // enum
@@ -232,7 +197,7 @@ enum Color {
   GREEN,
   BLUE,
 }
-fn test_enum() -> void {
+fn test_enum(t: Testing) -> void {
   let red = Color.RED;
   let green = Color.GREEN;
   let blue = Color.BLUE;
@@ -240,27 +205,21 @@ fn test_enum() -> void {
   test_assert("RED" == "" + Color.RED);
   test_assert(red != green);
   test_assert(blue != green);
-
-  println("success: test_enum()");
 }
-test_enum();
 
 ///////////////////////////////////////////////////////////////////////////////
 // for loop
-fn test_for_loop() -> void {
+fn test_for_loop(t: Testing) -> void {
   for (let i = 0; i <= 100; i++) { i++; }
 
   let n = 0;
   for (let i = 0; i <= 100; i++) { n += i; }
   test_assert(5050 == n);
-
-  println("success: test_for_loop()");
 }
-test_for_loop();
 
 ///////////////////////////////////////////////////////////////////////////////
 // do while loop
-fn test_while_loop() -> void {
+fn test_while_loop(t: Testing) -> void {
   let n = 0; let i = 0;
   while (i <= 100) { n += i; i++; }
   test_assert(5050 == n);
@@ -268,10 +227,7 @@ fn test_while_loop() -> void {
   n = 0; i = 0;
   do { n += i; i++; } while (i <= 100);
   test_assert(5050 == n);
-
-  println("success: test_while_loop()");
 }
-test_while_loop();
 
 ///////////////////////////////////////////////////////////////////////////////
 // if
@@ -280,13 +236,11 @@ fn test_if_compare(x: i32, y: i32) -> i32 {
   else if (x < y) { return -1; }
   else { return 0; }
 }
-fn test_if() -> void {
+fn test_if(t: Testing) -> void {
   test_assert(1 == test_if_compare(20, 10));
   test_assert(-1 == test_if_compare(10, 20));
   test_assert(0 == test_if_compare(10, 10));
-  println("success: test_if()");
 }
-test_if();
 
 ///////////////////////////////////////////////////////////////////////////////
 // switch
@@ -297,11 +251,9 @@ fn test_switch_color(color: Color) -> str {
     case Color.BLUE { return "BLUE"; }
     default { return "NULL"; }
 }
-fn test_switch() -> void {
+fn test_switch(t: Testing) -> void {
   test_switch_color(Color.RED);
-  println("success: test_switch()");
 }
-test_switch();
 
 ///////////////////////////////////////////////////////////////////////////////
 // exception
@@ -309,7 +261,7 @@ test_switch();
 //// throw exception
 struct TestException : Exception {}
 fn test_exception_f() -> void throws Exception { throw New TestException(); }
-fn test_exception() -> void {
+fn test_exception(t: Testing) -> void {
   let n = 2;
   try {
     test_exception_f();
@@ -323,16 +275,13 @@ fn test_exception() -> void {
     n -= 1;
   }
   test_assert(0 == n);
-
-  println("success: test_exception()");
 }
-test_exception();
 
 ///////////////////////////////////////
 //// throw runtime exception
 struct TestRuntimeException : RuntimeException {}
 fn test_runtime_exception_f() -> void { throw New TestRuntimeException(); }
-fn test_runtime_exception() -> void {
+fn test_runtime_exception(t: Testing) -> void {
   let n = 2;
   try {
     test_runtime_exception_f();
@@ -346,14 +295,11 @@ fn test_runtime_exception() -> void {
     n -= 1;
   }
   test_assert(0 == n);
-
-  println("success: test_runtime_exception()");
 }
-test_runtime_exception();
 
 ///////////////////////////////////////
 //// null pointer exception
-fn test_null_pointer_exception() -> void {
+fn test_null_pointer_exception(t: Testing) -> void {
   let n = 1;
   let o: ToStringClass;
   try {
@@ -362,26 +308,20 @@ fn test_null_pointer_exception() -> void {
     n = 0;
   }
   test_assert(0 == n);
-
-  println("success: test_null_pointer_exception()");
 }
-test_null_pointer_exception();
 
 ///////////////////////////////////////////////////////////////////////////////
 // global variable
 let global_i = 10;
-fn test_global_variable() -> void {
+fn test_global_variable(t: Testing) -> void {
   test_assert(10 == global_i);
   global_i = 20;
   test_assert(20 == global_i);
-
-  println("success: test_global_variable()");
 }
-test_global_variable();
 
 ///////////////////////////////////////////////////////////////////////////////
 // native pointer (File)
-fn test_native_pointer() -> void {
+fn test_native_pointer(t: Testing) -> void {
   let fp = __fopen("test/hello.txt", "r");
   let contents = New str[0];
   let s: str;
@@ -391,25 +331,19 @@ fn test_native_pointer() -> void {
   test_assert(2 == contents.size());
   test_assert("hello\n" == contents[0]);
   test_assert("world\n" == contents[1]);
-
-  println("success: test_native_pointer()");
 }
-test_native_pointer();
 
 ///////////////////////////////////////////////////////////////////////////////
 // native call
 fn hoge(v: i32) -> i32 { return v; }
-fn test_native_call() -> void {
+fn test_native_call(t: Testing) -> void {
   test_native(hoge);
-
-  println("success: test_native_call()");
 }
-test_native_call();
 
 ///////////////////////////////////////////////////////////////////////////////
 // std
 
-fn test_std_hasher() -> void {
+fn test_std_hasher(t: Testing) -> void {
   test_assert(Hasher::hash_str("42") == Hasher::hash_str("42"));
   test_assert(Hasher::hash_str("42") != Hasher::hash_str("32"));
 
@@ -418,7 +352,4 @@ fn test_std_hasher() -> void {
   test_assert(Hasher::hash(p) != Hasher::hash(Point { x: 10, y: 20 }));
 
   test_assert(Hasher::hash(null) == 0);
-
-  println("success: test_std_hasher()");
 }
-test_std_hasher();

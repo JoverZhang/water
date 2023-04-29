@@ -149,9 +149,19 @@ DKC_create_compiler(void)
 #endif
 #endif
 
+    compiler->is_test = DVM_FALSE;
+    compiler->test_target = NULL;
+
     dkc_set_current_compiler(compiler_backup);
 
     return compiler;
+}
+
+DKC_Compiler *DKC_create_compiler_for_test(char *test_target) {
+  DKC_Compiler *compiler = DKC_create_compiler();
+  compiler->is_test = DVM_TRUE;
+  compiler->test_target = test_target;
+  return compiler;
 }
 
 static CompilerList *
@@ -352,11 +362,12 @@ static DVM_ExecutableInfo info_list[100];
 static int info_list_len = 0;
 
 static void
-append_function_call_expression(DKC_Compiler *compiler, char *name) {
+append_function_call_expression(DKC_Compiler *compiler, char *name,
+                                ArgumentList *args) {
     StatementList *func_call = dkc_create_statement_list(
         dkc_create_expression_statement(
             dkc_create_function_call_expression(
-                dkc_create_identifier_expression(name), NULL)));
+                dkc_create_identifier_expression(name), args)));
     if (!compiler->statement_list) {
         compiler->statement_list = func_call;
     } else {
@@ -378,15 +389,75 @@ append_main_call(DKC_Compiler *compiler) {
 
         if (fpos->class_definition == NULL &&
             dvm_compare_string(fpos->name, "main")) {
-            append_function_call_expression(compiler, fpos->name);
+            append_function_call_expression(compiler, fpos->name, NULL);
             break;
+        }
+    }
+}
+
+/**
+ * TODO: refactor the bad code
+ */
+static void
+append_test_call(DKC_Compiler *compiler) {
+    ArgumentList *args =
+        dkc_create_argument_list(
+            dkc_create_static_function_call_expression(
+                "Testing", "new", NULL));
+
+    // specify target
+    if (compiler->test_target) {
+        Expression *str_expr = dkc_alloc_expression(STRING_EXPRESSION);
+        str_expr->u.string_value = dkc_mbstowcs_alloc(
+            compiler->current_line_number, compiler->test_target);
+        append_function_call_expression(compiler, "Testing::start",
+                                      dkc_create_argument_list(str_expr));
+
+        append_function_call_expression(compiler,
+                                      compiler->test_target,
+                                      args);
+
+        Expression *str_expr2 = dkc_alloc_expression(STRING_EXPRESSION);
+        str_expr2->u.string_value = dkc_mbstowcs_alloc(
+            compiler->current_line_number, compiler->test_target);
+        append_function_call_expression(compiler, "Testing::end",
+                                        dkc_create_argument_list(str_expr2));
+        return;
+    }
+
+    for (FunctionDefinition * fpos = compiler->function_list;
+         fpos; fpos = fpos->next) {
+        // FIXME: Duplicate name of `Testing`
+        if (fpos->class_definition == NULL &&
+            fpos->parameter != NULL &&
+            fpos->parameter->type->basic_type == DVM_UNSPECIFIED_IDENTIFIER_TYPE &&
+            dvm_compare_string( fpos->parameter->type->identifier,
+                                "Testing")) {
+
+            Expression *str_expr = dkc_alloc_expression(STRING_EXPRESSION);
+            str_expr->u.string_value = dkc_mbstowcs_alloc(
+              compiler->current_line_number, fpos->name);
+            append_function_call_expression(compiler, "Testing::start",
+                                          dkc_create_argument_list(str_expr));
+
+            append_function_call_expression(compiler, fpos->name, args);
+
+            Expression *str_expr2 = dkc_alloc_expression(STRING_EXPRESSION);
+            str_expr2->u.string_value = dkc_mbstowcs_alloc(
+                compiler->current_line_number, fpos->name);
+            append_function_call_expression(compiler, "Testing::end",
+                                          dkc_create_argument_list(str_expr2));
         }
     }
 }
 
 static void
 add_entrypoint(DKC_Compiler *compiler) {
-      append_main_call(compiler);
+    if (compiler->is_test) {
+        append_test_call(compiler);
+    } else {
+        append_main_call(compiler);
+    }
 }
 
 static void
