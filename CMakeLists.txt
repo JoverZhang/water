@@ -17,7 +17,6 @@ add_subdirectory(share)
 
 add_executable(water main/main.c)
 
-set(CMAKE_EXE_LINKER_FLAGS "-static")
 target_link_libraries(
         water PRIVATE
         compiler
@@ -27,27 +26,6 @@ target_link_libraries(
         mem
         share
         m)
+target_link_options(water PRIVATE -static)
 
-find_program(BASH_PROGRAM bash)
-if (BASH_PROGRAM)
-    enable_testing()
-
-    add_test(NAME case_main
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND sh test/run.sh ${CMAKE_BINARY_DIR}/water RUN
-            ${CMAKE_CURRENT_SOURCE_DIR}/test/case.water)
-    add_test(NAME case
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND sh test/run.sh ${CMAKE_BINARY_DIR}/water TEST
-            ${CMAKE_CURRENT_SOURCE_DIR}/test/case.water)
-
-    # std
-    add_test(NAME water.collections.map
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND sh test/run.sh ${CMAKE_BINARY_DIR}/water TEST
-            ${CMAKE_CURRENT_SOURCE_DIR}/require/water/collections/map.water)
-    add_test(NAME water.fs
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-            COMMAND sh test/run.sh ${CMAKE_BINARY_DIR}/water TEST
-            ${CMAKE_CURRENT_SOURCE_DIR}/require/water/fs.water)
-endif ()
+include(cmake/modules/ctest.cmake)

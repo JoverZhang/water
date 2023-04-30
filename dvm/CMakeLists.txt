@@ -1,5 +1,3 @@
-set(CMAKE_C_FLAGS "-DDEBUG -Wall -ansi -pedantic -Wswitch-enum")
-
 add_library(dvm STATIC
         error.c
         error_message.c
@@ -10,3 +8,4 @@ add_library(dvm STATIC
         nativeif.c
         util.c
         wchar.c)
+target_compile_options(dvm PRIVATE -DDEBUG -Wall -ansi -pedantic -Wswitch-enum)

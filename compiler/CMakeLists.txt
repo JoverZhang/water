@@ -1,6 +1,3 @@
-set(CMAKE_C_FLAGS "-Wall -ansi -pedantic -Wswitch-enum -DDEBUG -DUTF_8_SOURCE")
-
-include_directories(./)
 find_package(FLEX 2.6 REQUIRED)
 find_package(BISON 3.0 REQUIRED)
 
@@ -23,3 +20,5 @@ add_library(compiler STATIC
         string.c
         util.c
         wchar.c)
+target_compile_options(compiler PRIVATE -Wall -ansi -pedantic -Wswitch-enum -DDEBUG -DUTF_8_SOURCE)
+target_include_directories(compiler PRIVATE .)
