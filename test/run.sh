@@ -9,6 +9,8 @@ FILE="$3"
 echo -e "\e[34mRUN TEST: $FILE\e[0m"
 if [ "$CMD" = 'TEST' ]; then
   $WATER test "$FILE"
+elif [ "$CMD" = 'LSP_DUMP' ]; then
+  $WATER lsp dump "$FILE"
 elif [ "$CMD" = 'RUN' ]; then
   $WATER "$FILE"
 else

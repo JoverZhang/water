@@ -11,8 +11,17 @@ find_program(BASH_PROGRAM bash)
 if (BASH_PROGRAM)
     enable_testing()
 
-    water_add_test(run_cases
+    # RUN
+    water_add_test(run::cases
             RUN test/cases.water)
+
+
+    # LSP
+    water_add_test(lsp_dump::cases
+            LSP_DUMP test/cases.water)
+
+
+    # TEST
     water_add_test(cases
             TEST test/cases.water)
 
