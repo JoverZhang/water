@@ -266,10 +266,10 @@ fn test_exception(t: Testing) -> void {
   try {
     test_exception_f();
     test_assert(false);
-  } catch (TestException e) {
+  } catch (e: TestException) {
     test_assert(true);
     n -= 1;
-  } catch (Exception e) {
+  } catch (e: Exception) {
     test_assert(false);
   } finally {
     n -= 1;
@@ -286,10 +286,10 @@ fn test_runtime_exception(t: Testing) -> void {
   try {
     test_runtime_exception_f();
     test_assert(false);
-  } catch (TestRuntimeException e) {
+  } catch (e: TestRuntimeException) {
     test_assert(true);
     n -= 1;
-  } catch (RuntimeException e) {
+  } catch (e: RuntimeException) {
     test_assert(false);
   } finally {
     n -= 1;
@@ -304,7 +304,7 @@ fn test_null_pointer_exception(t: Testing) -> void {
   let o: ToStringClass;
   try {
     o.to_str();
-  } catch(NullPointerException e) {
+  } catch(e: NullPointerException) {
     n = 0;
   }
   test_assert(0 == n);

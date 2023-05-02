@@ -785,9 +785,9 @@ catch_clause
         {
             $<catch_clause>$ = dkc_start_catch_clause();
         }
-          LP type_specifier IDENTIFIER RP block
+          LP IDENTIFIER COLON type_specifier RP block
         {
-            $<catch_clause>$ = dkc_end_catch_clause($<catch_clause>2, $4, $5, $7);
+            $<catch_clause>$ = dkc_end_catch_clause($<catch_clause>2, $6, $4, $8);
         }
         ;
 throw_statement
