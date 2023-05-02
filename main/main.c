@@ -5,73 +5,151 @@
 #include "DVM.h"
 #include "MEM.h"
 
+typedef enum {
+    MODE_RUN,
+    MODE_LSP,
+    MODE_TEST,
+} Mode;
+
+typedef struct {
+    DVM_Boolean is_err;
+    Mode mode;
+    char *path;
+    union {
+        struct {
+            DVM_Boolean dump;
+        } lsp;
+        struct {
+            char *target;
+        } test;
+    } u;
+} Args;
+
 void
 print_usage() {
     fprintf(stderr,"Usage:\n"
                    "\twater <file> [args...]\n"
-                   "\twater lsp <file>\n"
+                   "\twater lsp dump <file>\n"
                    "\twater test <file> [name] [args...]\n"
     );
+}
+
+FILE *
+read_file(char *path) {
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "%s not found.\n", path);
+        exit(1);
+    }
+    return fp;
+}
+
+Args parse_args(int argc, char **argv) {
+  Args args = {};
+
+  if (argc < 2 || !strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
+      goto err;
+  }
+
+  // test
+  if (!strcmp(argv[1], "test")) {
+    if (argc < 3) {
+        goto err;
+    }
+
+    args.mode = MODE_TEST;
+    args.path = argv[2];
+
+    if (argc < 4) {
+      args.u.test.target = NULL;
+    } else {
+      args.u.test.target = argv[3];
+    }
+    return args;
+  }
+  // lsp
+  else if (!strcmp(argv[1], "lsp")) {
+    if (argc < 3) {
+      goto err;
+    }
+
+    args.mode = MODE_LSP;
+
+    if (!strcmp(argv[2], "dump")) {
+      if (argc < 4) {
+        goto err;
+      }
+
+      args.path = argv[3];
+      args.u.lsp.dump = DVM_TRUE;
+      return args;
+    }
+
+    goto err;
+  }
+  // run
+  else {
+    args.mode = MODE_RUN;
+    args.path = argv[1];
+
+    return args;
+  }
+
+err:
+  args.is_err = DVM_TRUE;
+  return args;
 }
 
 int
 main(int argc, char **argv)
 {
+    Args args;
     DKC_Compiler *compiler;
-    char *file;
+    char *path;
     FILE *fp;
     DVM_ExecutableList *list;
     DVM_VirtualMachine *dvm;
-    DVM_Boolean is_lsp = DVM_FALSE;
-
-    if (argc < 2) {
-        print_usage();
-        return 1;
-    }
 
     setlocale(LC_CTYPE, "");
 
-    // test
-    if (!strcmp(argv[1], "test")) {
-        if (argc < 3) {
-          print_usage();
-          return 1;
-        }
-        file = argv[2];
-        if (argc < 4) {
-            compiler = DKC_create_compiler_for_test(NULL);
-        } else {
-            compiler = DKC_create_compiler_for_test(argv[3]);
-        }
-    }
-    // lsp
-    else if (!strcmp(argv[1], "lsp")) {
-        if (argc < 3) {
-            print_usage();
-            return 1;
-        }
-        file = argv[2];
-        is_lsp = DVM_TRUE;
-        compiler = DKC_create_compiler();
-    }
-    // run
-    else {
-        file = argv[1];
-        compiler = DKC_create_compiler();
-    }
-
-    fp = fopen(file, "r");
-    if (fp == NULL) {
-        fprintf(stderr, "%s not found.\n", argv[1]);
+    args = parse_args(argc, argv);
+    if (args.is_err) {
+        print_usage();
         return 1;
     }
+    path = args.path;
 
-    if (is_lsp) {
-        DKC_lsp(compiler, fp, file);
-        return 0;
+    switch (args.mode) {
+        case MODE_RUN:
+            compiler = DKC_create_compiler();
+            break;
+
+        case MODE_LSP:
+            if (args.u.lsp.dump) {
+                fp = read_file(args.path);
+
+                compiler = DKC_create_compiler();
+                DKC_lsp(compiler, fp, args.path);
+                DKC_dispose_compiler(compiler);
+
+                return 0;
+            }
+
+            print_usage();
+            return 1;
+
+        case MODE_TEST:
+            compiler = DKC_create_compiler_for_test(args.u.test.target);
+            break;
+
+        default:
+            print_usage();
+            return 1;
     }
 
-    list = DKC_compile(compiler, fp, argv[1]);
+    fp = read_file(args.path);
+
+    list = DKC_compile(compiler, fp, path);
     dvm = DVM_create_virtual_machine();
     DVM_set_executable(dvm, list);
     DKC_dispose_compiler(compiler);
