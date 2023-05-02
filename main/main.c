@@ -9,6 +9,7 @@ void
 print_usage() {
     fprintf(stderr,"Usage:\n"
                    "\twater <file> [args...]\n"
+                   "\twater lsp <file>\n"
                    "\twater test <file> [name] [args...]\n"
     );
 }
@@ -21,6 +22,7 @@ main(int argc, char **argv)
     FILE *fp;
     DVM_ExecutableList *list;
     DVM_VirtualMachine *dvm;
+    DVM_Boolean is_lsp = DVM_FALSE;
 
     if (argc < 2) {
         print_usage();
@@ -42,6 +44,16 @@ main(int argc, char **argv)
             compiler = DKC_create_compiler_for_test(argv[3]);
         }
     }
+    // lsp
+    else if (!strcmp(argv[1], "lsp")) {
+        if (argc < 3) {
+            print_usage();
+            return 1;
+        }
+        file = argv[2];
+        is_lsp = DVM_TRUE;
+        compiler = DKC_create_compiler();
+    }
     // run
     else {
         file = argv[1];
@@ -52,6 +64,11 @@ main(int argc, char **argv)
     if (fp == NULL) {
         fprintf(stderr, "%s not found.\n", argv[1]);
         return 1;
+    }
+
+    if (is_lsp) {
+        DKC_lsp(compiler, fp, file);
+        return 0;
     }
 
     list = DKC_compile(compiler, fp, argv[1]);

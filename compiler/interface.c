@@ -620,6 +620,22 @@ DKC_compile(DKC_Compiler *compiler, FILE *fp, char *path)
     return list;
 }
 
+void
+DKC_lsp(DKC_Compiler *compiler, FILE *fp, char *path) {
+  FunctionDefinition *fd;
+  Declaration *local_var;
+
+  DKC_compile(compiler, fp, path);
+  for (fd = compiler->function_list; fd; fd = fd->next) {
+      printf("%s:%d\n", fd->name, fd->end_line_number);
+      for (int i = 0; i < fd->local_variable_count; i++) {
+          local_var = fd->local_variable[i];
+          printf("\t%s: %s\n", local_var->name,
+                 dkc_get_type_name(local_var->type));
+      }
+  }
+}
+
 PackageName *
 create_one_package_name(DKC_Compiler *compiler,
                         char *str, int start_idx, int to_idx)
