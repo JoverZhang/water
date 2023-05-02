@@ -24,16 +24,23 @@ fn test_function(t: Testing) -> void {
 ///////////////////////////////////////////////////////////////////////////////
 // basic type
 fn test_basic_type(t: Testing) -> void {
+  let b = true;
   let i = 10;
   let f = 12.3;
-  let b = true;
+  let s = "hello";
 
+  let bb: bool = true;
   let ii: i32 = 10;
   let ff: f64 = 12.3;
-  let bb: bool = true;
+  let ss: str = "hello";
+
+  test_assert(bb == bb);
   test_assert(i == ii);
   test_assert(f == ff);
-  test_assert(bb == bb);
+  test_assert(s == ss);
+
+  let n: Any = null;
+  test_assert(n == null);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
