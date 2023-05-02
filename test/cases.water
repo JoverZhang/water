@@ -163,15 +163,15 @@ fn test_downcast(t: Testing) -> void {
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// instanceof
-fn test_instanceof(t: Testing) -> void {
+// is
+fn test_is(t: Testing) -> void {
   let o: ToString = ToStringClass {};
-  test_assert(o instanceof ToStringClass);
-  // test_assert(o instanceof ToString); // always is true
+  test_assert(o is ToStringClass);
+  // test_assert(o is ToString); // always is true
 
   let child: Parent = New Child(10, 20);
-  test_assert(child instanceof Child);
-  // test_assert(child instanceof Parent); // always is true
+  test_assert(child is Child);
+  // test_assert(child is Parent); // always is true
 }
 
 ///////////////////////////////////////////////////////////////////////////////

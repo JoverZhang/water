@@ -145,7 +145,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"this"         return THIS_T;
 <INITIAL>"super"        return SUPER_T;
 <INITIAL>"constructor"  return CONSTRUCTOR;
-<INITIAL>"instanceof"   return INSTANCEOF;
+<INITIAL>"is"           return INSTANCEOF;
 <INITIAL>"delegate"     return DELEGATE;
 <INITIAL>"enum"         return ENUM;
 <INITIAL>"final"        return FINAL;
