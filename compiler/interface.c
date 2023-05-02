@@ -622,18 +622,35 @@ DKC_compile(DKC_Compiler *compiler, FILE *fp, char *path)
 
 void
 DKC_lsp(DKC_Compiler *compiler, FILE *fp, char *path) {
-  FunctionDefinition *fd;
-  Declaration *local_var;
+    ClassDefinition *cd;
+    ExtendsList *ext_inter;
+    FunctionDefinition *fd;
+    Declaration *local_var;
 
-  DKC_compile(compiler, fp, path);
-  for (fd = compiler->function_list; fd; fd = fd->next) {
-      printf("%s:%d\n", fd->name, fd->end_line_number);
-      for (int i = 0; i < fd->local_variable_count; i++) {
-          local_var = fd->local_variable[i];
-          printf("\t%s: %s\n", local_var->name,
-                 dkc_get_type_name(local_var->type));
-      }
-  }
+    DKC_compile(compiler, fp, path);
+
+    printf("+----------------------+\n");
+    printf("|  STRUCT DEFINITIONS  |\n");
+    printf("+----------------------+\n");
+    for (cd = compiler->class_definition_list; cd; cd = cd->next) {
+        printf("%s(:%d)\n", cd->name, cd->line_number);
+        for (ext_inter = cd->interface_list; ext_inter;
+             ext_inter = ext_inter->next) {
+            printf(" | %s\n", ext_inter->identifier);
+        }
+    }
+
+    printf("+----------------------+\n");
+    printf("| FUNCTION DEFINITIONS |\n");
+    printf("+----------------------+\n");
+    for (fd = compiler->function_list; fd; fd = fd->next) {
+        printf("%s(:%d)\n", fd->name, fd->end_line_number);
+        for (int i = 0; i < fd->local_variable_count; i++) {
+            local_var = fd->local_variable[i];
+            printf(" | %s: %s\n", local_var->name,
+                   dkc_get_type_name(local_var->type));
+        }
+    }
 }
 
 PackageName *
