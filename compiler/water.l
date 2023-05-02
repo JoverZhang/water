@@ -125,7 +125,7 @@ DVM_Boolean st_character_literal_state;
 <INITIAL>"finally"      return FINALLY;
 <INITIAL>"throw"        return THROW;
 <INITIAL>"throws"       return THROWS;
-<INITIAL>"boolean"      return BOOLEAN_T;
+<INITIAL>"bool"         return BOOLEAN_T;
 <INITIAL>"void"         return VOID_T;
 <INITIAL>"i32"          return INT_T;
 <INITIAL>"f64"          return DOUBLE_T;

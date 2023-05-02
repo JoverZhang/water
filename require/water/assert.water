@@ -11,12 +11,12 @@ fn panic(message: str) -> void {
   throw New Panic("panic");
 }
 
-fn assert(expression: boolean, message: str) -> void {
+fn assert(expression: bool, message: str) -> void {
   if (!expression) {
     panic(message);
   }
 }
 
-fn test_assert(expression: boolean) -> void {
+fn test_assert(expression: bool) -> void {
   assert(expression, "test failed");
 }
