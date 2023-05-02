@@ -630,16 +630,16 @@ dkc_get_basic_type_name(DVM_BasicType type)
         return "void";
         break;
     case DVM_BOOLEAN_TYPE:
-        return "boolean";
+        return "bool";
         break;
     case DVM_INT_TYPE:
-        return "int";
+        return "i32";
         break;
     case DVM_DOUBLE_TYPE:
-        return "double";
+        return "f64";
         break;
     case DVM_STRING_TYPE:
-        return "string";
+        return "str";
         break;
     case DVM_NATIVE_POINTER_TYPE:
         return "native_pointer";
