@@ -39,7 +39,7 @@ fn test_basic_type(t: Testing) -> void {
   test_assert(f == ff);
   test_assert(s == ss);
 
-  let n: Any = null;
+  let n: any = null;
   test_assert(n == null);
 }
 

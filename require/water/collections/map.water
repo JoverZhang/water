@@ -3,10 +3,10 @@ use water.assert;
 
 struct Node {
   key: str;
-  val: Any;
+  val: any;
   next: Node;
 
-  pub fn new(key: str, val: Any) -> Node {
+  pub fn new(key: str, val: any) -> Node {
     return Node { key: key, val: val, next: null };
   }
 }
@@ -25,11 +25,11 @@ pub struct HashMap {
     };
   }
 
-  pub fn put(this, key: str, val: Any) -> Any {
+  pub fn put(this, key: str, val: any) -> any {
     let hash = Hasher::hash_str(key);
     let i = hash % this.threshold;
     let slot = this.table[i];
-    let old: Any = null;
+    let old: any = null;
     if (slot == null) {
       this.table[i] = Node::new(key, val);
     } else {
@@ -59,7 +59,7 @@ pub struct HashMap {
     return old;
   }
 
-  pub fn get(this, key: str) -> Any {
+  pub fn get(this, key: str) -> any {
     let hash = Hasher::hash_str(key);
     let i = hash % this.threshold;
     let slot = this.table[i];
