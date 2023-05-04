@@ -86,6 +86,10 @@ fn test_native(dele: HogeDelegate) -> void;
 pub interface any {
 }
 
+pub interface Stringable {
+  pub fn to_str(this) -> str;
+}
+
 pub struct String {
   pub val: str;
 
