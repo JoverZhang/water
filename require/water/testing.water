@@ -1,0 +1,38 @@
+use water.lang;
+
+struct Panic : RuntimeException {
+  override
+  pub constructor initialize(message: str) {
+    this.message = message;
+  }
+}
+
+fn panic(message: str) -> void {
+  throw New Panic("panic");
+}
+
+fn assert_t(expression: bool, message: str) -> void {
+  if (!expression) {
+    panic(message);
+  }
+}
+
+pub struct Testing {
+
+  pub fn new() -> Testing {
+    return Testing{};
+  }
+
+  pub fn assert(this, expression: bool) -> void {
+    assert_t(expression, "test failed");
+  }
+
+  pub fn start(name: str) -> void {
+    println("=== RUN   " + name);
+  }
+
+  pub fn end(name: str) -> void {
+    println("--- PASS: " + name + " (0.00s)");
+  }
+}
+

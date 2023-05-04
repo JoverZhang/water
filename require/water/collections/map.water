@@ -1,5 +1,5 @@
 use water.lang;
-use water.assert;
+use water.testing;
 
 struct Node {
   key: str;
@@ -118,22 +118,22 @@ fn test_std_hashmap(t: Testing) -> void {
   map.put("b", String::new("456"));
   map.put("c", String::new("789"));
 
-  test_assert(map.get("a").(String).val == "123");
-  test_assert(map.get("b").(String).val == "456");
-  test_assert(map.get("c").(String).val == "789");
+  t.assert(map.get("a").(String).val == "123");
+  t.assert(map.get("b").(String).val == "456");
+  t.assert(map.get("c").(String).val == "789");
 
-  test_assert(map.size() == 3);
-  test_assert(map.keys().size() == 3);
+  t.assert(map.size() == 3);
+  t.assert(map.keys().size() == 3);
 
   // orverride
-  test_assert(map.put("a", String::new("000")).(String).val == "123");
+  t.assert(map.put("a", String::new("000")).(String).val == "123");
 
-  test_assert(map.get("a").(String).val == "000");
-  test_assert(map.get("b").(String).val == "456");
-  test_assert(map.get("c").(String).val == "789");
+  t.assert(map.get("a").(String).val == "000");
+  t.assert(map.get("b").(String).val == "456");
+  t.assert(map.get("c").(String).val == "789");
 
-  test_assert(map.size() == 3);
-  test_assert(map.keys().size() == 3);
+  t.assert(map.size() == 3);
+  t.assert(map.keys().size() == 3);
 
   // resize
   map.put("d", String::new("4"));
@@ -150,26 +150,26 @@ fn test_std_hashmap(t: Testing) -> void {
   map.put("o", String::new("15"));
   map.put("p", String::new("16"));
 
-  test_assert(map.size() == 16);
-  test_assert(map.threshold == 16);
+  t.assert(map.size() == 16);
+  t.assert(map.threshold == 16);
   map.put("q", String::new("17"));
-  test_assert(map.size() == 17);
-  test_assert(map.threshold == 32);
+  t.assert(map.size() == 17);
+  t.assert(map.threshold == 32);
 
-  test_assert(map.get("a").(String).val == "000");
-  test_assert(map.get("b").(String).val == "456");
-  test_assert(map.get("c").(String).val == "789");
-  test_assert(map.get("d").(String).val == "4");
-  test_assert(map.get("e").(String).val == "5");
-  test_assert(map.get("f").(String).val == "6");
-  test_assert(map.get("g").(String).val == "7");
-  test_assert(map.get("h").(String).val == "8");
-  test_assert(map.get("i").(String).val == "9");
-  test_assert(map.get("j").(String).val == "10");
-  test_assert(map.get("k").(String).val == "11");
-  test_assert(map.get("l").(String).val == "12");
-  test_assert(map.get("m").(String).val == "13");
-  test_assert(map.get("n").(String).val == "14");
-  test_assert(map.get("o").(String).val == "15");
-  test_assert(map.get("p").(String).val == "16");
+  t.assert(map.get("a").(String).val == "000");
+  t.assert(map.get("b").(String).val == "456");
+  t.assert(map.get("c").(String).val == "789");
+  t.assert(map.get("d").(String).val == "4");
+  t.assert(map.get("e").(String).val == "5");
+  t.assert(map.get("f").(String).val == "6");
+  t.assert(map.get("g").(String).val == "7");
+  t.assert(map.get("h").(String).val == "8");
+  t.assert(map.get("i").(String).val == "9");
+  t.assert(map.get("j").(String).val == "10");
+  t.assert(map.get("k").(String).val == "11");
+  t.assert(map.get("l").(String).val == "12");
+  t.assert(map.get("m").(String).val == "13");
+  t.assert(map.get("n").(String).val == "14");
+  t.assert(map.get("o").(String).val == "15");
+  t.assert(map.get("p").(String).val == "16");
 }

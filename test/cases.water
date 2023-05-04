@@ -1,15 +1,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 // require
 use water.lang;
-use water.assert;
+use water.testing;
 use water.native.fs;
 
 ///////////////////////////////////////
 //// rename
-rename water.assert.assert assert2;
+rename water.testing.assert_t assert_tt;
 
-assert(true, "failed to rename function");
-assert2(true, "failed to rename function");
+assert_t(true, "failed to rename function");
+assert_tt(true, "failed to rename function");
 
 ///////////////////////////////////////////////////////////////////////////////
 // function
@@ -18,7 +18,7 @@ fn fibonacci(n: i32) -> i32 {
   return fibonacci(n - 1) + fibonacci(n - 2);
 }
 fn test_function(t: Testing) -> void {
-  test_assert(55 == fibonacci(10));
+  t.assert(55 == fibonacci(10));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,13 +34,13 @@ fn test_basic_type(t: Testing) -> void {
   let ff: f64 = 12.3;
   let ss: str = "hello";
 
-  test_assert(bb == bb);
-  test_assert(i == ii);
-  test_assert(f == ff);
-  test_assert(s == ss);
+  t.assert(bb == bb);
+  t.assert(i == ii);
+  t.assert(f == ff);
+  t.assert(s == ss);
 
   let n: any = null;
-  test_assert(n == null);
+  t.assert(n == null);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -60,7 +60,7 @@ pub struct Point {
 }
 fn test_class_method(t: Testing) -> void {
   let point = New Point(10, 20);
-  test_assert("Point(x = 10, y = 20)" == point.to_str());
+  t.assert("Point(x = 10, y = 20)" == point.to_str());
 }
 
 ///////////////////////////////////////
@@ -71,8 +71,8 @@ struct MultiConstructorClass {
   pub constructor initialize2() { this.n = 2; }
 }
 fn test_class_multi_constructor(t: Testing) -> void {
-  test_assert(1 == New MultiConstructorClass().n);
-  test_assert(2 == New MultiConstructorClass.initialize2().n);
+  t.assert(1 == New MultiConstructorClass().n);
+  t.assert(2 == New MultiConstructorClass.initialize2().n);
 }
 
 ///////////////////////////////////////
@@ -84,8 +84,8 @@ struct FieldInitClass {
 }
 fn test_class_field_init(t: Testing) -> void {
   let o = FieldInitClass::new();
-  test_assert(0 == o.x);
-  test_assert(10 == o.y);
+  t.assert(0 == o.x);
+  t.assert(10 == o.y);
 }
 
 ///////////////////////////////////////
@@ -99,7 +99,7 @@ struct ToStringClass : ToString {
 }
 fn test_interface(t: Testing) -> void {
   let o: ToString = ToStringClass {};
-  test_assert("ToStringClass()" == o.to_str());
+  t.assert("ToStringClass()" == o.to_str());
 }
 
 ///////////////////////////////////////
@@ -122,7 +122,7 @@ struct Child : Parent {
 
 fn test_class_subclass(t: Testing) -> void {
   let child = New Child(10, 20);
-  test_assert("Child(Parent(pv = 10), cv = 20)" == child.to_str());
+  t.assert("Child(Parent(pv = 10), cv = 20)" == child.to_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,39 +131,39 @@ fn test_variables(t: Testing) -> void {
   let i = 10;
   let f = 30.2;
   let s = "Hello ";
-  test_assert(40.2 == i + f);
+  t.assert(40.2 == i + f);
   i = i + f;
-  test_assert("Hello 40" == s + i);
+  t.assert("Hello 40" == s + i);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // array
 fn test_array(t: Testing) -> void {
   let i32_arr = [ 1, 2, 3 ];
-  test_assert(3 == i32_arr.size());
-  test_assert(1 == i32_arr[0]);
-  test_assert(2 == i32_arr[1]);
-  test_assert(3 == i32_arr[2]);
+  t.assert(3 == i32_arr.size());
+  t.assert(1 == i32_arr[0]);
+  t.assert(2 == i32_arr[1]);
+  t.assert(3 == i32_arr[2]);
   i32_arr[1] = 4;
-  test_assert(4 == i32_arr[1]);
+  t.assert(4 == i32_arr[1]);
 
   let f64_arr = [ 0.1, 2, 3 ];
-  test_assert(3 == f64_arr.size());
-  test_assert(0.1 == f64_arr[0]);
-  test_assert(2 == f64_arr[1]);
-  test_assert(3 == f64_arr[2]);
+  t.assert(3 == f64_arr.size());
+  t.assert(0.1 == f64_arr[0]);
+  t.assert(2 == f64_arr[1]);
+  t.assert(3 == f64_arr[2]);
 
   let s = "Hello World";
-  test_assert(11 == s.length());
-  test_assert("World" == s.substr(6, 5));
-  test_assert(5 == s.substr(6, 5).length());
+  t.assert(11 == s.length());
+  t.assert("World" == s.substr(6, 5));
+  t.assert(5 == s.substr(6, 5).length());
 
   let p1 = New Point(10, 10);
   let p3 = New Point(30, 30);
   let point_arr = [ p1, New Point(20, 20), p3 ];
-  test_assert(3 == point_arr.size());
-  test_assert(p1 == point_arr[0]);
-  test_assert(p3 == point_arr[2]);
+  t.assert(3 == point_arr.size());
+  t.assert(p1 == point_arr[0]);
+  t.assert(p3 == point_arr[2]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -172,7 +172,7 @@ fn test_cast(t: Testing) -> void {
   let child = New Child(10, 20);
   let parent1: Parent = child;
   let parent2: Parent = child;
-  test_assert(parent1 == parent2);
+  t.assert(parent1 == parent2);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -181,19 +181,19 @@ fn test_downcast(t: Testing) -> void {
   let o = ToStringClass {};
   let ts: ToString = o;
   o = ts.(ToStringClass);
-  test_assert("ToStringClass()" == ts.(ToStringClass).to_str());
+  t.assert("ToStringClass()" == ts.(ToStringClass).to_str());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // is
 fn test_is(t: Testing) -> void {
   let o: ToString = ToStringClass {};
-  test_assert(o is ToStringClass);
-  // test_assert(o is ToString); // always is true
+  t.assert(o is ToStringClass);
+  // t.assert(o is ToString); // always is true
 
   let child: Parent = New Child(10, 20);
-  test_assert(child is Child);
-  // test_assert(child is Parent); // always is true
+  t.assert(child is Child);
+  // t.assert(child is Parent); // always is true
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -205,11 +205,11 @@ struct DelegateClass {
 }
 fn test_delegate(t: Testing) -> void {
   let f: DelegateF2I = f2i;
-  test_assert(42 == f(42.2));
+  t.assert(42 == f(42.2));
 
   let o = DelegateClass{ f: f2i };
   let g = o.f;
-  test_assert(42 == g(42.2));
+  t.assert(42 == g(42.2));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -223,10 +223,10 @@ fn test_enum(t: Testing) -> void {
   let red = Color.RED;
   let green = Color.GREEN;
   let blue = Color.BLUE;
-  test_assert(Color.RED == red);
-  test_assert("RED" == "" + Color.RED);
-  test_assert(red != green);
-  test_assert(blue != green);
+  t.assert(Color.RED == red);
+  t.assert("RED" == "" + Color.RED);
+  t.assert(red != green);
+  t.assert(blue != green);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -236,7 +236,7 @@ fn test_for_loop(t: Testing) -> void {
 
   let n = 0;
   for (let i = 0; i <= 100; i++) { n += i; }
-  test_assert(5050 == n);
+  t.assert(5050 == n);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -244,11 +244,11 @@ fn test_for_loop(t: Testing) -> void {
 fn test_while_loop(t: Testing) -> void {
   let n = 0; let i = 0;
   while (i <= 100) { n += i; i++; }
-  test_assert(5050 == n);
+  t.assert(5050 == n);
 
   n = 0; i = 0;
   do { n += i; i++; } while (i <= 100);
-  test_assert(5050 == n);
+  t.assert(5050 == n);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -259,9 +259,9 @@ fn test_if_compare(x: i32, y: i32) -> i32 {
   else { return 0; }
 }
 fn test_if(t: Testing) -> void {
-  test_assert(1 == test_if_compare(20, 10));
-  test_assert(-1 == test_if_compare(10, 20));
-  test_assert(0 == test_if_compare(10, 10));
+  t.assert(1 == test_if_compare(20, 10));
+  t.assert(-1 == test_if_compare(10, 20));
+  t.assert(0 == test_if_compare(10, 10));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -287,16 +287,16 @@ fn test_exception(t: Testing) -> void {
   let n = 2;
   try {
     test_exception_f();
-    test_assert(false);
+    t.assert(false);
   } catch (e: TestException) {
-    test_assert(true);
+    t.assert(true);
     n -= 1;
   } catch (e: Exception) {
-    test_assert(false);
+    t.assert(false);
   } finally {
     n -= 1;
   }
-  test_assert(0 == n);
+  t.assert(0 == n);
 }
 
 ///////////////////////////////////////
@@ -307,16 +307,16 @@ fn test_runtime_exception(t: Testing) -> void {
   let n = 2;
   try {
     test_runtime_exception_f();
-    test_assert(false);
+    t.assert(false);
   } catch (e: TestRuntimeException) {
-    test_assert(true);
+    t.assert(true);
     n -= 1;
   } catch (e: RuntimeException) {
-    test_assert(false);
+    t.assert(false);
   } finally {
     n -= 1;
   }
-  test_assert(0 == n);
+  t.assert(0 == n);
 }
 
 ///////////////////////////////////////
@@ -329,16 +329,16 @@ fn test_null_pointer_exception(t: Testing) -> void {
   } catch(e: NullPointerException) {
     n = 0;
   }
-  test_assert(0 == n);
+  t.assert(0 == n);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // global variable
 let global_i = 10;
 fn test_global_variable(t: Testing) -> void {
-  test_assert(10 == global_i);
+  t.assert(10 == global_i);
   global_i = 20;
-  test_assert(20 == global_i);
+  t.assert(20 == global_i);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -350,9 +350,9 @@ fn test_native_pointer(t: Testing) -> void {
   while ((s = __fgets(fp)) != null) {
     contents.add(s);
   }
-  test_assert(2 == contents.size());
-  test_assert("hello\n" == contents[0]);
-  test_assert("world\n" == contents[1]);
+  t.assert(2 == contents.size());
+  t.assert("hello\n" == contents[0]);
+  t.assert("world\n" == contents[1]);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -366,14 +366,14 @@ fn test_native_call(t: Testing) -> void {
 // std
 
 fn test_std_hasher(t: Testing) -> void {
-  test_assert(Hasher::hash_str("42") == Hasher::hash_str("42"));
-  test_assert(Hasher::hash_str("42") != Hasher::hash_str("32"));
+  t.assert(Hasher::hash_str("42") == Hasher::hash_str("42"));
+  t.assert(Hasher::hash_str("42") != Hasher::hash_str("32"));
 
   let p = Point { x: 10, y: 20 };
-  test_assert(Hasher::hash(p) == Hasher::hash(p));
-  test_assert(Hasher::hash(p) != Hasher::hash(Point { x: 10, y: 20 }));
+  t.assert(Hasher::hash(p) == Hasher::hash(p));
+  t.assert(Hasher::hash(p) != Hasher::hash(Point { x: 10, y: 20 }));
 
-  test_assert(Hasher::hash(null) == 0);
+  t.assert(Hasher::hash(null) == 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

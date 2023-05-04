@@ -1,6 +1,6 @@
 use water.lang;
+use water.testing;
 use water.native.fs;
-use water.assert;
 
 enum SeekForm {
   START,
@@ -75,10 +75,10 @@ fn test_std_fs(t: Testing) -> void {
   file.close();
 
   file = File::open("test/tmp.txt");
-  test_assert(file.read() == "test\n");
-  test_assert(file.read() == "write\n");
+  t.assert(file.read() == "test\n");
+  t.assert(file.read() == "write\n");
   file.close();
 
   remove_file("test/tmp.txt");
-  test_assert(File::open("test/tmp.txt") == null);
+  t.assert(File::open("test/tmp.txt") == null);
 }
