@@ -15,6 +15,8 @@ typedef struct {
     DVM_Boolean is_err;
     Mode mode;
     char *path;
+    int argc;
+    char **argv;
     union {
         struct {
             DVM_Boolean dump;
@@ -91,6 +93,8 @@ Args parse_args(int argc, char **argv) {
   else {
     args.mode = MODE_RUN;
     args.path = argv[1];
+    args.argc = argc - 1;
+    args.argv = argv + 1;
 
     return args;
   }
@@ -150,7 +154,7 @@ main(int argc, char **argv)
     fp = read_file(args.path);
 
     list = DKC_compile(compiler, fp, path);
-    dvm = DVM_create_virtual_machine();
+    dvm = DVM_create_virtual_machine(args.argc, args.argv);
     DVM_set_executable(dvm, list);
     DKC_dispose_compiler(compiler);
     DVM_execute(dvm);

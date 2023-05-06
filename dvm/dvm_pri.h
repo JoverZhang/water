@@ -259,6 +259,8 @@ struct DVM_VirtualMachine_tag {
     DVM_VTable  *string_v_table;
     DVM_Context *current_context;
     DVM_Context *free_context;
+    int argc;
+    char **argv;
 };
 
 typedef struct RefInNativeFunc_tag {

@@ -551,6 +551,27 @@ nv_parse_double_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
     return ret;
 }
 
+static DVM_ObjectRef
+nv_env_args(DVM_VirtualMachine *dvm, DVM_Context *context,
+            int arg_count, DVM_Value *args)
+{
+  DVM_Char *str;
+  DVM_ObjectRef d_str;
+  int array_size;
+  DVM_Value value;
+
+  DVM_ObjectRef ret = DVM_create_array_object(dvm, context, 0);
+  for (int i = 0; i < dvm->argc; i++) {
+    str = DVM_mbstowcs(dvm->argv[i]);
+    d_str = DVM_create_dvm_string(dvm, context, str);
+    array_size = DVM_array_size(dvm, ret.data);
+
+    value.object = d_str;
+    DVM_array_insert(dvm, ret.data, array_size, value);
+  }
+  return ret;
+}
+
 static DVM_Value
 nv_fabs_proc(DVM_VirtualMachine *dvm, DVM_Context *context,
               int arg_count, DVM_Value *args)
@@ -975,8 +996,12 @@ dvm_add_native_functions(DVM_VirtualMachine *dvm)
                             1, DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, "water.lang", "parse_double",
                             nv_parse_double_proc, 1, DVM_FALSE, DVM_FALSE);
-    
-    /* math.dkh */
+
+    /* env */
+    DVM_add_native_function(dvm, "water.env", "Env::args", nv_env_args, 0,
+                          DVM_FALSE, DVM_FALSE);
+
+    /* math */
     DVM_add_native_function(dvm, "water.math", "fabs", nv_fabs_proc, 1,
                             DVM_FALSE, DVM_FALSE);
     DVM_add_native_function(dvm, "water.math", "pow", nv_pow_proc, 2,

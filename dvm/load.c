@@ -831,7 +831,7 @@ set_built_in_methods(DVM_VirtualMachine *dvm)
 }
 
 DVM_VirtualMachine *
-DVM_create_virtual_machine(void)
+DVM_create_virtual_machine(int argc, char **argv)
 {
     DVM_VirtualMachine *dvm;
 
@@ -860,6 +860,9 @@ DVM_create_virtual_machine(void)
     dvm->top_level = NULL;
     dvm->current_context = NULL;
     dvm->free_context = NULL;
+
+    dvm->argc = argc;
+    dvm->argv = argv;
 
     dvm_add_native_functions(dvm);
 

@@ -26,7 +26,7 @@ typedef union {
     DVM_ObjectRef       object;
 } DVM_Value;
 
-DVM_VirtualMachine *DVM_create_virtual_machine(void);
+DVM_VirtualMachine *DVM_create_virtual_machine(int argc, char **argv);
 void DVM_set_executable(DVM_VirtualMachine *dvm, DVM_ExecutableList *list);
 DVM_Value DVM_execute(DVM_VirtualMachine *dvm);
 void DVM_dispose_executable_list(DVM_ExecutableList *list);
