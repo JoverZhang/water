@@ -27,7 +27,7 @@ ctest --test-dir build --verbose
 ./build/water ./examples/example.water
 ```
 
-Now, you'll see the `Hello World!` appear in your console.
+Now, you'll see the `Hello World!` in your console.
 
 ## Grammar Introduction
 
