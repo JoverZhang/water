@@ -99,6 +99,10 @@ You can try to run it:
 ./build/water test ./examples/example_test.water
 ```
 
+## Language Server Protocol
+
+> TODO
+
 ## Standard Library
 
 The following tools are currently available in Water Standard Library:
