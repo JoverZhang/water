@@ -67,7 +67,7 @@ pub struct DivisionByZeroException : RuntimeException {
 pub struct MultibyteCharacterConvertionException : RuntimeException {
 }
 
-pub struct ClassCastException : BugException {
+pub struct TypeCastException : BugException {
 }
 
 pub abstract struct ApplicationException : Exception {

@@ -1,0 +1,6 @@
+use water.testing;
+
+fn test_case(t: Testing) -> void {
+  let x = 42;
+  t.assert(42 == x);
+}

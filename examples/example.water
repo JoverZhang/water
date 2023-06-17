@@ -1,0 +1,5 @@
+use water.lang;
+
+fn main() -> void {
+  println("Hello World!");
+}
