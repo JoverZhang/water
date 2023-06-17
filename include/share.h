@@ -35,7 +35,7 @@ typedef enum {
 #define ARRAY_INDEX_EXCEPTION_NAME ("ArrayIndexOutOfBoundsException")
 #define STRING_INDEX_EXCEPTION_NAME ("StringIndexOutOfBoundsException")
 #define DIVISION_BY_ZERO_EXCEPTION_NAME ("DivisionByZeroException")
-#define CLASS_CAST_EXCEPTION_NAME ("ClassCastException")
+#define CLASS_CAST_EXCEPTION_NAME ("TypeCastException")
 #define MULTIBYTE_CONVERTION_EXCEPTION_NAME \
   ("MultibyteCharacterConvertionException")
 #define NUMBER_FORMAT_EXCEPTION_NAME ("NumberFormatException")
